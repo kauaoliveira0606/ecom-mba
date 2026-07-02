@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Meta Pixel Code removed: add your own pixel ID here -->
+  <title>You're In - Base44</title>
+  <link rel="icon" type="image/png" href="/base44/img/aids.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f8f7f5;
+      --card: #ffffff;
+      --border: rgba(0,0,0,0.09);
+      --text: #111111;
+      --text2: #6b7280;
+      --green: #1A83F2;
+      --gold: #f59e0b;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; height: auto; }
+
+    .section {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 56px 24px;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--green);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+    }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 8px 24px 20px;
+      text-align: center;
+    }
+
+    .confirmed-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(26,131,242,0.12);
+      border: 1px solid rgba(26,131,242,0.3);
+      color: var(--green);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: 28px;
+    }
+
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 1.4s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 span { color: var(--green); }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--text2);
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* ── WHAT HAPPENS NEXT ── */
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .step-row {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      overflow: hidden;
+    }
+
+    .step-icon {
+      width: 46px;
+      height: 46px;
+      background: rgba(26,131,242,0.1);
+      border: 1px solid rgba(26,131,242,0.25);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .step-body {
+      min-width: 0;
+      width: 100%;
+    }
+
+    .step-body strong {
+      display: block;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .step-body p {
+      font-size: 0.875rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    /* ── VALUE STACK ── */
+    .value-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      gap: 16px;
+    }
+
+    .value-item:last-of-type { border-bottom: none; }
+
+    .value-item-name { font-size: 0.9rem; font-weight: 600; }
+    .value-item-price { font-size: 0.875rem; color: var(--text2); text-decoration: line-through; white-space: nowrap; }
+
+    .value-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      padding: 20px 24px;
+      background: rgba(26,131,242,0.07);
+      border: 1px solid rgba(26,131,242,0.2);
+      border-radius: 14px;
+    }
+
+    .value-total-row .label { font-size: 1rem; color: var(--text2); }
+    .value-total-row .label strong { display: block; font-size: 1.3rem; font-weight: 900; color: var(--text); text-decoration: line-through; opacity: .45; }
+    .value-total-row .free { font-size: 2rem; font-weight: 900; color: var(--green); }
+
+    /* ── MODULE CARDS ── */
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    .mod-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .mod-icon {
+      width: 44px; height: 44px;
+      background: rgba(26,131,242,0.1);
+      border: 1px solid rgba(26,131,242,0.2);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+    }
+
+    .mod-info {}
+    .mod-title { font-size: 0.975rem; font-weight: 700; margin-bottom: 4px; }
+    .mod-desc { font-size: 0.85rem; color: var(--text2); line-height: 1.55; }
+    .mod-value { font-size: 0.8rem; color: var(--text2); margin-top: 8px; }
+    .mod-value span { color: var(--green); font-weight: 600; }
+
+    @media (max-width: 700px) { .mod-card { flex-direction: column; } }
+
+    /* ── TESTIMONIALS ── */
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .testi-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .testi-stars { display: flex; gap: 2px; margin-bottom: 10px; }
+    .star { color: var(--gold); font-size: 0.9rem; }
+
+    .win-card { break-inside: avoid; margin-bottom: 16px; }
+    @media (max-width: 700px) { .win-cols { columns: 2 !important; } }
+    @media (max-width: 480px) { .win-cols { columns: 1 !important; } }
+    .testi-text { font-size: 0.875rem; color: var(--text2); line-height: 1.65; margin-bottom: 14px; }
+    .testi-author { display: flex; align-items: center; gap: 10px; }
+    .testi-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg,#cbd5e1,#e2e8f0); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: #475569; flex-shrink: 0; }
+    .testi-name { font-size: 0.85rem; font-weight: 600; }
+    .testi-role { font-size: 0.75rem; color: var(--text2); }
+
+    /* ── FAQ ── */
+    .faq-list { display: flex; flex-direction: column; gap: 2px; }
+    .faq-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .faq-q { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; background: none; border: none; color: var(--text); font-size: 0.95rem; font-weight: 600; cursor: pointer; text-align: left; gap: 16px; font-family: 'Inter', sans-serif; }
+    .faq-icon { width: 22px; height: 22px; flex-shrink: 0; background: rgba(0,0,0,0.07); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; transition: transform .2s; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+    .faq-item.open .faq-a { max-height: 300px; }
+    .faq-a-inner { padding: 0 22px 18px; font-size: 0.875rem; color: var(--text2); line-height: 1.7; }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 28px 24px; text-align: center; color: var(--text2); font-size: 0.78rem; }
+    footer a { color: var(--text2); margin: 0 6px; }
+    footer a:hover { color: var(--text); }
+    .footer-disclaimer { max-width: 660px; margin: 14px auto 0; font-size: 0.7rem; color: #4b5563; line-height: 1.6; }
+
+    @media (max-width: 600px) {
+      .hero { padding: 8px 16px 32px; }
+      .section { padding: 40px 16px; }
+      .step-row { flex-direction: column; }
+      .value-total-row { flex-direction: column; gap: 8px; text-align: center; }
+      .sticky-bar { font-size: 0.7rem !important; padding: 8px 12px !important; }
+    }
+  </style>
+</head>
+<body>
+<div class="sticky-bar" style="position:sticky;top:0;z-index:999;background:#fff;border-bottom:2px solid #e5e7eb;padding:12px 20px;text-align:center;font-size:0.9rem;font-weight:600;color:#111;">
+  <span style="color:#dc2626;font-weight:800;">Wait</span><span id="sticky-name"></span> — your spot isn't locked in yet. Finish the steps below before your free access expires.
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="confirmed-badge" style="background:rgba(220,38,38,0.1);border-color:rgba(220,38,38,0.3);color:#dc2626;">
+    <span class="dot" style="background:#dc2626;"></span>
+    WAIT - Your spot isn't guaranteed yet
+  </div>
+
+  <h1 id="main-headline">Your Activation Is Live For The Next 24 Hours. We're Calling In The Next <span>1-10 Minutes.</span></h1>
+
+  <p class="hero-sub" style="color:#374151;">Get in contact with my team right now so your free course access doesn't expire. Watch the short video below first, then answer when we reach out. <a href="tel:+15176956714" style="color:var(--green) !important;font-weight:700;white-space:nowrap;text-decoration:none;">(517-695-6714)</a></p>
+
+  <!-- VIDEO PLACEHOLDER -->
+  <div style="max-width:680px;margin:12px auto 0;">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px 12px 0 0;padding:10px 16px;text-align:center;">
+      <span style="font-size:0.8rem;font-weight:700;color:var(--text);letter-spacing:0.5px;">Watch this video to claim your free course 👇</span>
+    </div>
+    <div style="width:100%;border-radius:0 0 16px 16px;overflow:hidden;">
+      <vturb-smartplayer id="vid-6a342e2d66e88e75bd6046fc" style="display: block; margin: 0 auto; width: 100%; "></vturb-smartplayer>
+      <script type="text/javascript"> var s=document.createElement("script"); s.src="https://scripts.converteai.net/acd61d31-54ac-4e72-a977-21cc9e8d1153/players/6a342e2d66e88e75bd6046fc/v4/player.js", s.async=!0,document.head.appendChild(s); </script>
+    </div>
+    <div style="margin-top:16px;background:#fff8f0;border:1.5px solid #e8a020;border-radius:12px;padding:14px 24px;display:flex;align-items:center;justify-content:center;gap:10px;">
+      <span style="font-size:1.1rem;">⚠️</span>
+      <p style="color:#c0390a;font-style:italic;font-size:0.95rem;font-weight:500;margin:0;">Don't leave this page. If you do, you might lose your chance to get the $3,000 course for free.</p>
+    </div>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- WHAT HAPPENS NEXT -->
+<div class="section">
+  <p class="section-label">What happens next</p>
+  <h2 class="section-title">Follow These Steps to <span style="text-decoration:underline;">Secure Your Spot</span></h2>
+
+  <div class="steps-list">
+    <div class="step-row">
+      <div class="step-icon" style="font-size:1.1rem;font-weight:800;color:#1A83F2;background:rgba(26,131,242,0.1);">1</div>
+      <div class="step-body">
+        <strong>Answer the call from your coach (1-10 min)</strong>
+        <p>A real coach will call and text you <a href="tel:+15176956714" style="color:var(--green) !important;font-weight:700;white-space:nowrap;text-decoration:none;">(517-695-6714)</a> shortly to give you access and answer any questions you have. Be sure to respond and pick up.</p>
+      </div>
+    </div>
+    <div style="background:#fff8f0;border:1.5px solid #e8a020;border-radius:12px;padding:14px 24px;text-align:center;">
+      <p style="color:#c0390a;font-style:italic;font-size:0.95rem;font-weight:500;margin:0;">If you miss this call, your free slot will be lost. Make sure your phone is nearby 📞</p>
+    </div>
+    <div class="step-row" style="flex-direction:column;align-items:stretch;">
+      <div style="display:flex;align-items:flex-start;gap:18px;">
+        <div class="step-icon" style="font-size:1.1rem;font-weight:800;color:#1A83F2;background:rgba(26,131,242,0.1);">2</div>
+        <div class="step-body">
+          <strong>Check What's Inside The Course and Go Through Our FAQ's</strong>
+        </div>
+      </div>
+
+      <!-- Course Phases -->
+      <div style="margin-top:20px;padding-left:64px;">
+
+        <div style="position:relative;margin-bottom:24px;">
+          <div style="position:absolute;left:-52px;width:40px;height:40px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;color:#fff;">1</div>
+          <div style="position:absolute;left:-33px;top:40px;bottom:-24px;width:2px;background:#e5e7eb;"></div>
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:4px;">Phase 1</div>
+          <div style="font-size:1rem;font-weight:800;color:var(--text);margin-bottom:4px;">Introduction</div>
+          <p style="font-size:0.88rem;color:var(--text2);line-height:1.6;">Get the full picture. Understand the AI branded e-com model, the tools you'll use, and what your path to 6 figures actually looks like.</p>
+        </div>
+
+        <div style="position:relative;margin-bottom:24px;">
+          <div style="position:absolute;left:-52px;width:40px;height:40px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;color:#fff;">2</div>
+          <div style="position:absolute;left:-33px;top:40px;bottom:-24px;width:2px;background:#e5e7eb;"></div>
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:4px;">Phase 2</div>
+          <div style="font-size:1rem;font-weight:800;color:var(--text);margin-bottom:4px;">Mindset</div>
+          <p style="font-size:0.88rem;color:var(--text2);line-height:1.6;">The inner game of building a brand. Develop the habits, beliefs, and discipline that separate people who scale from people who give up.</p>
+        </div>
+
+        <div style="position:relative;margin-bottom:24px;">
+          <div style="position:absolute;left:-52px;width:40px;height:40px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;color:#fff;">3</div>
+          <div style="position:absolute;left:-33px;top:40px;bottom:-24px;width:2px;background:#e5e7eb;"></div>
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:4px;">Phase 3</div>
+          <div style="font-size:1rem;font-weight:800;color:var(--text);margin-bottom:4px;">3-Day Workshop</div>
+          <p style="font-size:0.88rem;color:var(--text2);line-height:1.6;">Build a professional branded e-com store on Wix using AI. Full walkthrough - from blank page to live store, no design skills required.</p>
+        </div>
+
+        <div style="position:relative;margin-bottom:24px;">
+          <div style="position:absolute;left:-52px;width:40px;height:40px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;color:#fff;">4</div>
+          <div style="position:absolute;left:-33px;top:40px;bottom:-24px;width:2px;background:#e5e7eb;"></div>
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:4px;">Phase 4</div>
+          <div style="font-size:1rem;font-weight:800;color:var(--text);margin-bottom:4px;">Day 1: Building A Store With AI</div>
+          <p style="font-size:0.88rem;color:var(--text2);line-height:1.6;">Use AI to find winning products in real, sellable niches. No trend chasing. No guessing. This is how you start with a brand that lasts.</p>
+        </div>
+
+        <div style="position:relative;margin-bottom:24px;">
+          <div style="position:absolute;left:-52px;width:40px;height:40px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;color:#fff;">5</div>
+          <div style="position:absolute;left:-33px;top:40px;bottom:-24px;width:2px;background:#e5e7eb;"></div>
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:4px;">Phase 5</div>
+          <div style="font-size:1rem;font-weight:800;color:var(--text);margin-bottom:4px;">Day 2 - Finding A Winning Product</div>
+          <p style="font-size:0.88rem;color:var(--text2);line-height:1.6;">Full AI-powered store build - branding, product pages, copy, and checkout - done in hours, not weeks. Built to convert.</p>
+        </div>
+
+        <div style="position:relative;margin-bottom:0;">
+          <div style="position:absolute;left:-52px;width:40px;height:40px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;color:#fff;">6</div>
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:4px;">Phase 6</div>
+          <div style="font-size:1rem;font-weight:800;color:var(--text);margin-bottom:4px;">Day 3 - Ads and Organic Sales</div>
+          <p style="font-size:0.88rem;color:var(--text2);line-height:1.6;">The exact Meta ads strategy Bronson's members use to hit 8x+ ROAS and $20k–$100k months. No guessing - just the system.</p>
+        </div>
+      </div>
+
+      <!-- Leaderboard outside line, inside card -->
+      <div style="display:flex;gap:16px;align-items:flex-start;margin-top:20px;padding-left:24px;">
+        <div style="width:40px;height:40px;border-radius:50%;background:#f59e0b;display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:#fff;flex-shrink:0;">★</div>
+        <div style="background:#fffbeb;border:1.5px solid #fcd34d;border-radius:12px;padding:16px 18px;flex:1;">
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#d97706;margin-bottom:4px;">Leaderboard</div>
+          <div style="font-size:1rem;font-weight:800;color:var(--text);margin-bottom:4px;">The Leaderboard</div>
+          <p style="font-size:0.88rem;color:var(--text2);line-height:1.6;">Top performers get rewards. From macbooks to $$$$ in cash.</p>
+        </div>
+      </div>
+      <!-- Video Q&A inside step-row 2 -->
+      <div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--border);">
+        <h3 style="font-size:1.2rem;font-weight:800;color:var(--text);margin-bottom:8px;">Watch the FAQ Videos</h3>
+        <p style="font-size:0.875rem;color:var(--text2);line-height:1.6;margin-bottom:16px;">We know you have questions. Here are short 1-minute videos answering the most common ones.</p>
+        <style>@media(max-width:600px){.faq-video-grid{grid-template-columns:1fr!important;}.faq-video-last{grid-column:1!important;max-width:100%!important;}}</style>
+        <div class="faq-video-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;">
+
+          <div>
+            <p style="font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:10px;">Is dropshipping saturated?</p>
+            <vturb-smartplayer id="vid-6a46b105768dd475fe0ef22d" style="display:block;margin:0 auto;width:100%;"></vturb-smartplayer>
+            <script type="text/javascript">var s=document.createElement("script");s.src="https://scripts.converteai.net/acd61d31-54ac-4e72-a977-21cc9e8d1153/players/6a46b105768dd475fe0ef22d/v4/player.js";s.async=!0;document.head.appendChild(s);</script>
+          </div>
+
+          <div>
+            <p style="font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:10px;">What results can I realistically expect?</p>
+            <vturb-smartplayer id="vid-6a46b0f62fba18bca62535a9" style="display:block;margin:0 auto;width:100%;"></vturb-smartplayer>
+            <script type="text/javascript">var s=document.createElement("script");s.src="https://scripts.converteai.net/acd61d31-54ac-4e72-a977-21cc9e8d1153/players/6a46b0f62fba18bca62535a9/v4/player.js";s.async=!0;document.head.appendChild(s);</script>
+          </div>
+
+          <div>
+            <p style="font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:10px;">Can I still do this with a full-time job?</p>
+            <vturb-smartplayer id="vid-6a46b0e2ee101829869e584c" style="display:block;margin:0 auto;width:100%;"></vturb-smartplayer>
+            <script type="text/javascript">var s=document.createElement("script");s.src="https://scripts.converteai.net/acd61d31-54ac-4e72-a977-21cc9e8d1153/players/6a46b0e2ee101829869e584c/v4/player.js";s.async=!0;document.head.appendChild(s);</script>
+          </div>
+
+          <div>
+            <p style="font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:10px;">I've never sold a product online. Can I still make this work?</p>
+            <vturb-smartplayer id="vid-6a46b0da768dd475fe0ef118" style="display:block;margin:0 auto;width:100%;"></vturb-smartplayer>
+            <script type="text/javascript">var s=document.createElement("script");s.src="https://scripts.converteai.net/acd61d31-54ac-4e72-a977-21cc9e8d1153/players/6a46b0da768dd475fe0ef118/v4/player.js";s.async=!0;document.head.appendChild(s);</script>
+          </div>
+
+          <div>
+            <p style="font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:10px;">Can I do this if I don't know a lot about AI?</p>
+            <vturb-smartplayer id="vid-6a46b0e83b6f943678221201" style="display:block;margin:0 auto;width:100%;"></vturb-smartplayer>
+            <script type="text/javascript">var s=document.createElement("script");s.src="https://scripts.converteai.net/acd61d31-54ac-4e72-a977-21cc9e8d1153/players/6a46b0e83b6f943678221201/v4/player.js";s.async=!0;document.head.appendChild(s);</script>
+          </div>
+
+          <div>
+            <p style="font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:10px;">AI Branded Dropshipping explained</p>
+            <vturb-smartplayer id="vid-6a46b148ee101829869e5ad8" style="display:block;margin:0 auto;width:100%;"></vturb-smartplayer>
+            <script type="text/javascript">var s=document.createElement("script");s.src="https://scripts.converteai.net/acd61d31-54ac-4e72-a977-21cc9e8d1153/players/6a46b148ee101829869e5ad8/v4/player.js";s.async=!0;document.head.appendChild(s);</script>
+          </div>
+
+          <div>
+            <p style="font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:10px;">What's the catch? This is too good to be true</p>
+            <vturb-smartplayer id="vid-6a46b15daa4422a20d8bdefc" style="display:block;margin:0 auto;width:100%;"></vturb-smartplayer>
+            <script type="text/javascript">var s=document.createElement("script");s.src="https://scripts.converteai.net/acd61d31-54ac-4e72-a977-21cc9e8d1153/players/6a46b15daa4422a20d8bdefc/v4/player.js";s.async=!0;document.head.appendChild(s);</script>
+          </div>
+
+          <div>
+            <p style="font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:10px;">How much does it actually cost to get started?</p>
+            <vturb-smartplayer id="vid-6a46b171768dd475fe0ef4a8" style="display:block;margin:0 auto;width:100%;"></vturb-smartplayer>
+            <script type="text/javascript">var s=document.createElement("script");s.src="https://scripts.converteai.net/acd61d31-54ac-4e72-a977-21cc9e8d1153/players/6a46b171768dd475fe0ef4a8/v4/player.js";s.async=!0;document.head.appendChild(s);</script>
+          </div>
+
+          <div class="faq-video-last" style="grid-column:1/-1;max-width:calc(50% - 10px);">
+            <p style="font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:10px;">I'm not tech savvy. Can I still do this?</p>
+            <vturb-smartplayer id="vid-6a46b1786438a022d10025bd" style="display:block;margin:0 auto;width:100%;"></vturb-smartplayer>
+            <script type="text/javascript">var s=document.createElement("script");s.src="https://scripts.converteai.net/acd61d31-54ac-4e72-a977-21cc9e8d1153/players/6a46b1786438a022d10025bd/v4/player.js";s.async=!0;document.head.appendChild(s);</script>
+          </div>
+
+        </div>
+      </div>
+    </div><!-- end step-row 2 -->
+
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- BASE44 -->
+<div class="section">
+  <p class="section-label">Your AI toolkit</p>
+  <h2 class="section-title">One tool. Every AI capability you'll ever need.</h2>
+  <p class="section-desc">Meet Base44 — the platform at the center of everything we build.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px;">
+
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 26px;grid-column:1/-1;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
+        <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">⚡</div>
+        <div>
+          <div style="font-size:1.05rem;font-weight:800;color:var(--text);margin-bottom:2px;">Base44 replaces every AI subscription you have</div>
+          <div style="font-size:0.82rem;color:var(--text2);line-height:1.5;">ChatGPT, Claude, design tools, analytics — all in one place for a fraction of the cost.</div>
+        </div>
+      </div>
+      <p style="font-size:0.88rem;color:var(--text2);line-height:1.75;margin:0;">Think about how fast AI subscriptions add up. ChatGPT, Claude, image generators, video tools — before you know it you're looking at <strong style="color:var(--text);">$1,000–$4,000 a month</strong> just to keep up. Base44 consolidates all of that into a single platform for less than $2 a day, so you stop paying for five tools that half-overlap and start using one that does everything.</p>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px 22px;">
+      <div style="font-size:1.5rem;margin-bottom:12px;">🏗️</div>
+      <div style="font-size:0.92rem;font-weight:700;color:var(--text);margin-bottom:8px;">Build literally anything</div>
+      <p style="font-size:0.82rem;color:var(--text2);line-height:1.65;margin:0;">Custom websites, product pages, backend dashboards, analytics tools, ad creatives — if you can describe it, Base44 can build it. No dev skills required.</p>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px 22px;">
+      <div style="font-size:1.5rem;margin-bottom:12px;">🛒</div>
+      <div style="font-size:0.92rem;font-weight:700;color:var(--text);margin-bottom:8px;">Built for e-commerce</div>
+      <p style="font-size:0.82rem;color:var(--text2);line-height:1.65;margin:0;">Your store, your ad images, your video creatives, your growth dashboard — all generated with AI inside one platform. This is what gives our students an unfair advantage.</p>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px 22px;">
+      <div style="font-size:1.5rem;margin-bottom:12px;">💸</div>
+      <div style="font-size:0.92rem;font-weight:700;color:var(--text);margin-bottom:8px;">Saves you thousands</div>
+      <p style="font-size:0.82rem;color:var(--text2);line-height:1.65;margin:0;">Separate AI subscriptions can easily run $2k–$4k/month when stacked. Base44 cuts that cost dramatically to less than $2 a day while giving you more capability in a single, clean interface.</p>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px 22px;">
+      <div style="font-size:1.5rem;margin-bottom:12px;">🎯</div>
+      <div style="font-size:0.92rem;font-weight:700;color:var(--text);margin-bottom:8px;">Simple by design</div>
+      <p style="font-size:0.82rem;color:var(--text2);line-height:1.65;margin:0;">No juggling tabs, no switching tools mid-project, no learning five platforms. One login. Everything in one place. That simplicity alone is worth more than most people realize.</p>
+    </div>
+
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- NO CATCH -->
+<div class="section">
+  <p class="section-label">No Catch</p>
+  <h2 class="section-title">Wait, <span style="color:var(--green);">How Is This Free?</span></h2>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 32px;max-width:640px;">
+    <p style="font-size:1rem;color:#374151;line-height:1.75;margin-bottom:16px;">I've had over 500 people pay me to learn this model. So you might be asking - <strong style="color:#111111;">"how are you giving this away for free?"</strong></p>
+    <p style="font-size:1rem;color:#374151;line-height:1.75;margin-bottom:16px;">No catch. We partnered up with multi-billion dollar brands like <span style="color:var(--green);">Base44 and Wix</span>. So instead of you having to pay thousands upfront to get access to this, you would just need to use the tools that I have personally been using for years to get full access to everything.</p>
+    <p style="font-size:1rem;color:#374151;line-height:1.75;margin-bottom:16px;">This model works way better because now the only way we win is if you win. We get paid by our partners if you become a long term user of their platform. That money doesn't even come to us - it goes straight to them, because you'd need hosting no matter where you built a store. It's not something we charge for.</p>
+    <p style="font-size:1rem;color:#374151;line-height:1.75;margin-bottom:16px;">A lot of gurus you'll see online would never be willing to do this because they're not confident in helping you out.</p>
+    <p style="font-size:1rem;color:#374151;line-height:1.75;margin-bottom:16px;">So in summary, all that you need is to have our partner's software subscription, which comes down to <span style="color:var(--green);">less than $2 a day to get full access to everything.</span></p>
+    <p style="font-size:1rem;color:#374151;line-height:1.75;margin-bottom:24px;">It's a <span style="color:var(--green);">win-win for everyone</span>.</p>
+    <div style="display:flex;align-items:center;gap:16px;padding-top:20px;border-top:1px solid var(--border);">
+      <span style="font-family:'Georgia',serif;font-style:italic;font-size:1.4rem;color:var(--text);white-space:nowrap;">Bronson</span>
+      <span style="width:1px;height:28px;background:var(--border);flex-shrink:0;"></span>
+      <span style="font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text2);">Founder, AI Dropshipping Store</span>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<div class="section">
+  <p class="section-label">Student wins</p>
+  <h2 class="section-title">People Just Like You Who Followed The System</h2>
+  <p class="section-desc">No hype. Just outcomes from students who went through the same system you're about to access.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:32px;">
+    <div style="padding:24px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+      <div style="font-family:'Georgia',serif;font-style:italic;font-size:2rem;font-weight:700;color:var(--green);margin-bottom:6px;">$1.7M+</div>
+      <div style="font-size:0.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text2);">Student Revenue</div>
+    </div>
+    <div style="padding:24px;border-bottom:1px solid var(--border);">
+      <div style="font-family:'Georgia',serif;font-style:italic;font-size:2rem;font-weight:700;color:var(--green);margin-bottom:6px;">1,000+</div>
+      <div style="font-size:0.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text2);">People Helped</div>
+    </div>
+    <div style="padding:24px;border-right:1px solid var(--border);">
+      <div style="font-family:'Georgia',serif;font-style:italic;font-size:2rem;font-weight:700;color:var(--green);margin-bottom:6px;">297</div>
+      <div style="font-size:0.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text2);">First Sales This Month</div>
+    </div>
+    <div style="padding:24px;">
+      <div style="font-family:'Georgia',serif;font-style:italic;font-size:2rem;font-weight:700;color:var(--green);margin-bottom:6px;">24 days</div>
+      <div style="font-size:0.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text2);">Avg. to First $1K</div>
+    </div>
+  </div>
+
+  <div class="win-cols" style="columns:3;column-gap:16px;margin-bottom:16px;">
+
+    <div class="win-card" style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+      <div style="padding:14px 18px;">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:4px;">Personal Record</div>
+        <div style="font-size:0.9rem;font-weight:700;color:var(--text);">Ryan — $20k/month</div>
+        <div style="font-size:0.8rem;color:var(--text2);margin-top:2px;">Scaled from zero in first 90 days</div>
+      </div>
+      <img src="https://www.ad-ventur.com/13.png" alt="Personal Record" style="width:100%;display:block;object-fit:cover;" />
+    </div>
+
+    <div class="win-card" style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+      <div style="padding:14px 18px;">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:4px;">Best Day</div>
+        <div style="font-size:0.9rem;font-weight:700;color:var(--text);">Jaden — $8k day</div>
+        <div style="font-size:0.8rem;color:var(--text2);margin-top:2px;">Six months into the program</div>
+      </div>
+      <img src="https://www.ad-ventur.com/14.jpeg" alt="Best Day" style="width:100%;display:block;object-fit:cover;" />
+    </div>
+
+    <div class="win-card" style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+      <div style="padding:14px 18px;">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:4px;">Scaling Fast</div>
+        <div style="font-size:0.9rem;font-weight:700;color:var(--text);">Tyler — $100k in 2 weeks</div>
+        <div style="font-size:0.8rem;color:var(--text2);margin-top:2px;">No prior e-com experience</div>
+      </div>
+      <img src="https://www.ad-ventur.com/15.jpeg" alt="Scaling Fast" style="width:100%;display:block;object-fit:cover;" />
+    </div>
+
+    <div class="win-card" style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+      <div style="padding:14px 18px;">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:4px;">Consistent Growth</div>
+        <div style="font-size:0.9rem;font-weight:700;color:var(--text);">Kaleb</div>
+        <div style="font-size:0.8rem;color:var(--text2);margin-top:2px;">"The month over month growth has been nuts!"</div>
+      </div>
+      <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/COotKpt86Tsar2SeLpWc/media/68e955a65db7d666d86e6e1e.png" alt="Consistent Growth" style="width:100%;display:block;object-fit:cover;" />
+    </div>
+
+    <div class="win-card" style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+      <div style="padding:14px 18px;">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:4px;">From Zero</div>
+        <div style="font-size:0.9rem;font-weight:700;color:var(--text);">Daniel</div>
+        <div style="font-size:0.8rem;color:var(--text2);margin-top:2px;">"1 month in and look at that spike. Zero sales before."</div>
+      </div>
+      <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/COotKpt86Tsar2SeLpWc/media/67ee8a07f504aeaca49f2f7f.jpeg" alt="From Zero" style="width:100%;display:block;object-fit:cover;" />
+    </div>
+
+    <div class="win-card" style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+      <div style="padding:14px 18px;">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:4px;">Ads Success</div>
+        <div style="font-size:0.9rem;font-weight:700;color:var(--text);">Micah</div>
+        <div style="font-size:0.8rem;color:var(--text2);margin-top:2px;">"The 1-on-1 help with running the ads has been so awesome."</div>
+      </div>
+      <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/COotKpt86Tsar2SeLpWc/media/67ee8b33585902432f7f8a20.jpeg" alt="Ads Success" style="width:100%;display:block;object-fit:cover;" />
+    </div>
+
+    <div class="win-card" style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+      <div style="padding:14px 18px;">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:4px;">$30k in 23 Days</div>
+        <div style="font-size:0.9rem;font-weight:700;color:var(--text);">$30,000 revenue</div>
+        <div style="font-size:0.8rem;color:var(--text2);margin-top:2px;">In the last 23 days</div>
+      </div>
+      <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/COotKpt86Tsar2SeLpWc/media/67ee920b8f6c2c4ed1a2d580.png" alt="$30k in 23 days" style="width:100%;display:block;object-fit:cover;" />
+    </div>
+
+    <div class="win-card" style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+      <div style="padding:14px 18px;">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:4px;">8.79x ROAS</div>
+        <div style="font-size:0.9rem;font-weight:700;color:var(--text);">Skin care niche</div>
+        <div style="font-size:0.8rem;color:var(--text2);margin-top:2px;">TikTok ads crushing it</div>
+      </div>
+      <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/COotKpt86Tsar2SeLpWc/media/67ee9318918308897e0d8c9b.png" alt="8.79x ROAS" style="width:100%;display:block;object-fit:cover;" />
+    </div>
+
+    <div class="win-card" style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+      <div style="padding:14px 18px;">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:4px;">3.59x ROAS</div>
+        <div style="font-size:0.9rem;font-weight:700;color:var(--text);">New student — under 1 month in</div>
+        <div style="font-size:0.8rem;color:var(--text2);margin-top:2px;">Already scaling</div>
+      </div>
+      <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/COotKpt86Tsar2SeLpWc/media/67ee939558590276507f9c6c.png" alt="3.59x ROAS" style="width:100%;display:block;object-fit:cover;" />
+    </div>
+
+    <div class="win-card" style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+      <div style="padding:14px 18px;">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:4px;">Live Results</div>
+        <div style="font-size:0.9rem;font-weight:700;color:var(--text);">Current results</div>
+        <div style="font-size:0.8rem;color:var(--text2);margin-top:2px;">No old screenshots here</div>
+      </div>
+      <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/COotKpt86Tsar2SeLpWc/media/67ee946b918308652f0d8de4.png" alt="Live Results" style="width:100%;display:block;object-fit:cover;" />
+    </div>
+
+    <div class="win-card" style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+      <div style="padding:14px 18px;">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:4px;">Clothing Niche</div>
+        <div style="font-size:0.9rem;font-weight:700;color:var(--text);">First drop sold out</div>
+        <div style="font-size:0.8rem;color:var(--text2);margin-top:2px;">Clothing brand — strong ROAS on first run</div>
+      </div>
+      <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/COotKpt86Tsar2SeLpWc/media/67ee95224930c4210b003576.png" alt="Clothing Niche" style="width:100%;display:block;object-fit:cover;" />
+    </div>
+
+    <div class="win-card" style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+      <div style="padding:14px 18px;">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:4px;">3.61x ROAS</div>
+        <div style="font-size:0.9rem;font-weight:700;color:var(--text);">Organic hair & skin care brand</div>
+        <div style="font-size:0.8rem;color:var(--text2);margin-top:2px;">Ripping sales with Meta ads</div>
+      </div>
+      <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/COotKpt86Tsar2SeLpWc/media/67ee95b6e416f131f1a415da.png" alt="3.61x ROAS" style="width:100%;display:block;object-fit:cover;" />
+    </div>
+
+    <div class="win-card" style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+      <div style="padding:14px 18px;">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:4px;">Supplement Niche</div>
+        <div style="font-size:0.9rem;font-weight:700;color:var(--text);">$100k+ months incoming</div>
+        <div style="font-size:0.8rem;color:var(--text2);margin-top:2px;">Getting into the big numbers</div>
+      </div>
+      <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/COotKpt86Tsar2SeLpWc/media/67ee96518f6c2cb9f8a2da5b.png" alt="Supplement Niche" style="width:100%;display:block;object-fit:cover;" />
+    </div>
+
+  </div>
+</div>
+
+<!-- BOTTOM CTA -->
+<div style="background:#f5f0e8;padding:72px 24px;text-align:center;">
+  <h2 style="font-size:clamp(2rem,5vw,3.2rem);font-weight:900;color:#0a0a0a;letter-spacing:-1px;line-height:1.15;margin-bottom:16px;">That's It. Now Keep Your Phone Close.</h2>
+  <p style="font-size:1rem;color:#6b7280;max-width:480px;margin:0 auto 36px;line-height:1.65;">Your coach will call to get you set up. While you wait, scroll through the course overview above so you show up ready.</p>
+  <div style="display:flex;align-items:center;justify-content:center;gap:32px;flex-wrap:wrap;">
+    <span style="display:flex;align-items:center;gap:8px;font-size:0.9rem;font-weight:600;color:#0a0a0a;">
+      <span style="color:#1A83F2;font-size:1rem;">✓</span> $3,000 value, unlocked
+    </span>
+<span style="display:flex;align-items:center;gap:8px;font-size:0.9rem;font-weight:600;color:#0a0a0a;">
+      <span style="color:#1A83F2;font-size:1rem;">✓</span> No card required
+    </span>
+  </div>
+</div>
+
+<footer>
+  <div>
+    <a href="/privacy" target="_blank">Privacy Policy</a>
+    <a href="/terms" target="_blank">Terms of Service</a>
+  </div>
+  <p class="footer-disclaimer">
+    INCOME DISCLAIMER: Results mentioned are not typical. Individual results will vary based on effort, experience, background, and market conditions. This is an educational program. We make no guarantees of income or business outcomes.
+  </p>
+  <p style="margin-top:12px;">&copy; 2025 AI Dropshipping Store. All rights reserved.</p>
+</footer>
+
+<script>
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  (function() {
+    const params = new URLSearchParams(window.location.search);
+    const name = params.get('name');
+    if (name) {
+      const first = name.trim().split(' ')[0];
+      const el = document.getElementById('main-headline');
+      if (el) el.innerHTML = first + ', Your Activation Is Live For The Next 24 Hours. We\'re Calling In The Next <span>1-10 Minutes.</span>';
+      const sticky = document.getElementById('sticky-name');
+      if (sticky) sticky.textContent = ' ' + first + ',';
+    }
+  })();
+</script>
+
+</body>
+</html>
