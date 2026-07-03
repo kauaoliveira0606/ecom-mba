@@ -802,6 +802,22 @@
     <div id="admin-user-list" style="display:flex;flex-direction:column;gap:10px;">
       <p style="color:#6b7280;font-size:.85rem;">Loading...</p>
     </div>
+
+    <div style="font-size:1rem;font-weight:800;color:#111;margin:28px 0 14px;padding-top:20px;border-top:1px solid #e5e7eb;">Proof Submissions</div>
+    <div id="admin-proof-list" style="display:flex;flex-direction:column;gap:10px;">
+      <p style="color:#6b7280;font-size:.85rem;">Loading...</p>
+    </div>
+
+    <div style="font-size:1rem;font-weight:800;color:#111;margin:28px 0 14px;padding-top:20px;border-top:1px solid #e5e7eb;">Coaching Calls Tab Settings</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <label style="font-size:.8rem;font-weight:700;color:#374151;">Zoom link
+        <input id="admin-coaching-zoom" type="text" placeholder="https://zoom.us/j/..." style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;">
+      </label>
+      <label style="font-size:.8rem;font-weight:700;color:#374151;">Details / instructions
+        <textarea id="admin-coaching-details" rows="3" placeholder="e.g. Calls happen every Tuesday at 3pm EST..." style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;resize:vertical;"></textarea>
+      </label>
+      <button id="admin-coaching-save-btn" onclick="adminSaveCoachingSettings()" style="align-self:flex-start;background:#1A83F2;color:#fff;font-weight:700;font-size:.85rem;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;">Save</button>
+    </div>
   </div>
 </div>
 
@@ -846,6 +862,10 @@
     <div class="nav-item" onclick="showView('leaderboard',this); fetchLeaderboard();">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
       <span class="nav-label">Leaderboard</span>
+    </div>
+    <div class="nav-item" id="nav-coaching" style="display:none;" onclick="showView('coaching',this); loadCoachingView();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+      <span class="nav-label">Coaching Calls</span>
     </div>
     <div class="nav-item" id="nav-admin" style="display:none;" onclick="openAdminPanel()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><circle cx="18" cy="6" r="3" fill="currentColor" stroke="none"/><path d="M17 6h2M18 5v2" stroke="#fff" stroke-width="1.5"/></svg>
@@ -896,6 +916,10 @@
     <button class="mob-nav-item" id="mnav-leaderboard" onclick="showView('leaderboard', null); fetchLeaderboard();">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
       Rank
+    </button>
+    <button class="mob-nav-item" id="mnav-coaching" style="display:none;" onclick="showView('coaching', document.getElementById('nav-coaching')); loadCoachingView();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+      Coaching
     </button>
     <button class="mob-nav-item" id="mnav-admin" style="display:none;" onclick="openAdminPanel()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -1749,6 +1773,24 @@
   const SB_KEY = 'sb_publishable_UtZIMav5o005fLRtya8avw_cipIVea7';
   const sbHeaders = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' };
 
+  // ── Discord: deliver proof-of-subscription uploads via our own server route ──
+  // (the real webhook URL lives server-side only, in a Vercel env var — never in this file)
+  async function sendProofToDiscord(tabLabel, actionKey, file) {
+    const email = getStoredEmail();
+    const formData = new FormData();
+    formData.append('email', email || 'unknown');
+    formData.append('tab', tabLabel);
+    formData.append('action', actionKey);
+    formData.append('file', file, file.name);
+    try {
+      await fetch('/api/discord-proof', { method: 'POST', body: formData });
+      return true;
+    } catch (e) {
+      console.error('Discord webhook failed:', e);
+      return false;
+    }
+  }
+
   async function sbSelect(table, filter) {
     const res = await fetch(`${SB_URL}/${table}?${filter}&select=*`, { headers: sbHeaders });
     return res.json();
@@ -2536,6 +2578,8 @@ After implementing, add clear comments in the code showing where the Pixel ID is
 
     // Handle deep link from email
     setTimeout(handleDeepLink, 100);
+
+    checkCoachingAccess();
   }
 
   // Logout
@@ -2935,21 +2979,39 @@ After implementing, add clear comments in the code showing where the Pixel ID is
     updateRewardsUI();
   }
 
-  function rwCheckPending() {
-    const pending = rwGetPending();
-    const actions = rwGetActions();
-    const now = Date.now();
-    let changed = false;
-    for (const [key, ts] of Object.entries(pending)) {
-      if (now - ts >= RW_AUTO_MS && !actions[key]) {
-        rwSetAction(key);
-        rwAddEntries(RW_ENTRY_MAP[key] || 0);
-        delete pending[key];
-        changed = true;
-        rwShowToast('✓ Proof approved! +' + (RW_ENTRY_MAP[key] || 0) + ' entries added.');
+  async function rwCheckPending() {
+    const email = getStoredEmail();
+    if (!email) return;
+    try {
+      const rows = await sbSelect(
+        'proof_submissions',
+        `email=eq.${encodeURIComponent(email)}&tab=eq.${encodeURIComponent('Rewards / Prize Pool')}`
+      );
+      if (!Array.isArray(rows)) return;
+      const actions = rwGetActions();
+      const pending = rwGetPending();
+      let changed = false;
+      for (const row of rows) {
+        const key = row.action_key;
+        if (row.status === 'approved' && !actions[key]) {
+          rwSetAction(key);
+          rwAddEntries(RW_ENTRY_MAP[key] || 0);
+          delete pending[key];
+          changed = true;
+          rwShowToast('✓ Proof approved! +' + (RW_ENTRY_MAP[key] || 0) + ' entries added.');
+        } else if (row.status === 'rejected' && pending[key]) {
+          delete pending[key];
+          changed = true;
+          rwShowToast('Your proof for "' + key + '" was rejected — please try again.');
+        }
       }
+      if (changed) {
+        localStorage.setItem(RW_PENDING_KEY, JSON.stringify(pending));
+        updateRewardsUI();
+      }
+    } catch (e) {
+      // fail silently — UI just keeps showing "Awaiting Approval"
     }
-    if (changed) localStorage.setItem(RW_PENDING_KEY, JSON.stringify(pending));
   }
 
   function rwUpload(actionKey) {
@@ -2958,16 +3020,20 @@ After implementing, add clear comments in the code showing where the Pixel ID is
     input.click();
   }
 
-  function rwOnFileSelected(input) {
+  async function rwOnFileSelected(input) {
     if (!input.files || !input.files.length) return;
     const actionKey = input.dataset.action;
     const actions = rwGetActions();
     const pending = rwGetPending();
     if (actions[actionKey] || pending[actionKey]) { input.value = ''; return; }
+    const file = input.files[0];
+    const email = getStoredEmail();
+    sendProofToDiscord('Rewards / Prize Pool', actionKey, file);
+    sbInsert('proof_submissions', { email, tab: 'Rewards / Prize Pool', action_key: actionKey, status: 'pending' });
     pending[actionKey] = Date.now();
     localStorage.setItem(RW_PENDING_KEY, JSON.stringify(pending));
     input.value = '';
-    rwShowToast('📸 Proof received! Entries will be added within 2 hours.');
+    rwShowToast('📸 Proof received! Awaiting review.');
     updateRewardsUI();
   }
 
@@ -3135,22 +3201,41 @@ After implementing, add clear comments in the code showing where the Pixel ID is
     document.getElementById('es-file-input').click();
   }
 
-  function esOnFileSelected(input) {
+  async function esOnFileSelected(input) {
     if (!input.files || !input.files.length) return;
     if (esIsUnlocked() || esIsPending()) { input.value = ''; return; }
+    const file = input.files[0];
+    const email = getStoredEmail();
+    sendProofToDiscord('Elite Status', 'elite-status-upgrade', file);
+    sbInsert('proof_submissions', { email, tab: 'Elite Status', action_key: 'elite-status-upgrade', status: 'pending' });
     localStorage.setItem(ES_PENDING_KEY, Date.now());
     input.value = '';
-    rwShowToast('📸 Proof submitted! Elite Status will activate within 2 hours.');
+    rwShowToast('📸 Proof submitted! Awaiting review.');
     updateEliteUI();
   }
 
-  function esCheckPending() {
-    const ts = localStorage.getItem(ES_PENDING_KEY);
-    if (ts && !esIsUnlocked() && Date.now() - parseInt(ts) >= ES_AUTO_MS) {
-      localStorage.setItem(ES_UNLOCKED_KEY, '1');
-      localStorage.removeItem(ES_PENDING_KEY);
-      rwShowToast('🌟 Elite Status activated! All perks are now unlocked.');
-      updateEliteUI();
+  async function esCheckPending() {
+    const email = getStoredEmail();
+    if (!email || esIsUnlocked()) return;
+    try {
+      const rows = await sbSelect(
+        'proof_submissions',
+        `email=eq.${encodeURIComponent(email)}&tab=eq.${encodeURIComponent('Elite Status')}&action_key=eq.elite-status-upgrade`
+      );
+      const row = Array.isArray(rows) ? rows[0] : null;
+      if (!row) return;
+      if (row.status === 'approved') {
+        localStorage.setItem(ES_UNLOCKED_KEY, '1');
+        localStorage.removeItem(ES_PENDING_KEY);
+        rwShowToast('🌟 Elite Status activated! All perks are now unlocked.');
+        updateEliteUI();
+      } else if (row.status === 'rejected' && esIsPending()) {
+        localStorage.removeItem(ES_PENDING_KEY);
+        rwShowToast('Your Elite Status proof was rejected — please try again.');
+        updateEliteUI();
+      }
+    } catch (e) {
+      // fail silently — UI just keeps showing "Awaiting Approval"
     }
   }
 
@@ -3342,6 +3427,8 @@ After implementing, add clear comments in the code showing where the Pixel ID is
     const list  = document.getElementById('admin-user-list');
     panel.style.display = 'flex';
     list.innerHTML = '<p style="color:#6b7280;font-size:.85rem;">Loading...</p>';
+    loadAdminProofList();
+    loadAdminCoachingSettings();
     try {
       const data = await sbSelect('profiles', 'order=created_at.desc');
       if (!Array.isArray(data) || data.length === 0) {
@@ -3379,7 +3466,114 @@ After implementing, add clear comments in the code showing where the Pixel ID is
     }
     openAdminPanel();
   }
+
+  // ── Proof submissions (admin review) ──
+  async function loadAdminProofList() {
+    const list = document.getElementById('admin-proof-list');
+    list.innerHTML = '<p style="color:#6b7280;font-size:.85rem;">Loading...</p>';
+    try {
+      const data = await sbSelect('proof_submissions', 'order=created_at.desc');
+      if (!Array.isArray(data) || data.length === 0) {
+        list.innerHTML = '<p style="color:#6b7280;font-size:.85rem;">No submissions yet.</p>';
+        return;
+      }
+      list.innerHTML = data.map(s => `
+        <div style="display:flex;align-items:center;justify-content:space-between;background:#f8fafc;border-radius:10px;padding:12px 14px;gap:10px;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:.88rem;font-weight:700;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.email}</div>
+            <div style="font-size:.75rem;color:#9ca3af;margin-top:2px;">${s.tab} — ${s.action_key}</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0;">
+            ${s.status === 'approved'
+              ? `<span style="font-size:.75rem;color:#1A83F2;font-weight:700;background:#dbeafe;border-radius:6px;padding:4px 10px;">Approved</span>`
+              : s.status === 'rejected'
+              ? `<span style="font-size:.75rem;color:#dc2626;font-weight:700;background:#fee2e2;border-radius:6px;padding:4px 10px;">Rejected</span>`
+              : `<span style="font-size:.75rem;color:#d97706;font-weight:700;background:#fef3c7;border-radius:6px;padding:4px 10px;">Pending</span>
+                 <button onclick="adminReviewProof(${s.id},'approved',this)" style="font-size:.75rem;background:#dbeafe;color:#1A83F2;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-weight:700;">Approve</button>
+                 <button onclick="adminReviewProof(${s.id},'rejected',this)" style="font-size:.75rem;background:#fee2e2;color:#dc2626;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-weight:700;">Reject</button>`
+            }
+          </div>
+        </div>`).join('');
+    } catch (e) {
+      list.innerHTML = `<p style="color:#dc2626;font-size:.85rem;">Error loading submissions. Try again.</p>`;
+    }
+  }
+
+  async function adminReviewProof(id, status, btn) {
+    if (btn) { btn.disabled = true; btn.textContent = '...'; }
+    await sbUpdate('proof_submissions', `id=eq.${id}`, { status, reviewed_at: new Date().toISOString() });
+    loadAdminProofList();
+  }
+
+  // ── Coaching Calls settings (admin) ──
+  async function loadAdminCoachingSettings() {
+    const rows = await sbSelect('coaching_settings', 'id=eq.1');
+    const row = Array.isArray(rows) ? rows[0] : null;
+    if (row) {
+      document.getElementById('admin-coaching-zoom').value = row.zoom_link || '';
+      document.getElementById('admin-coaching-details').value = row.details || '';
+    }
+  }
+
+  async function adminSaveCoachingSettings() {
+    const btn = document.getElementById('admin-coaching-save-btn');
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+    const zoom_link = document.getElementById('admin-coaching-zoom').value.trim();
+    const details = document.getElementById('admin-coaching-details').value.trim();
+    await sbUpdate('coaching_settings', 'id=eq.1', { zoom_link, details });
+    btn.disabled = false;
+    btn.textContent = 'Save';
+  }
+
+  // ── Coaching Calls tab (student view) ──
+  async function checkCoachingAccess() {
+    const email = getStoredEmail();
+    if (!email) return;
+    try {
+      const rows = await sbSelect(
+        'proof_submissions',
+        `email=eq.${encodeURIComponent(email)}&status=eq.approved&limit=1`
+      );
+      const unlocked = Array.isArray(rows) && rows.length > 0;
+      const navItem = document.getElementById('nav-coaching');
+      const mnavItem = document.getElementById('mnav-coaching');
+      if (navItem)  navItem.style.display  = unlocked ? '' : 'none';
+      if (mnavItem) mnavItem.style.display = unlocked ? '' : 'none';
+    } catch (e) {
+      // fail silently — tab just stays hidden
+    }
+  }
+
+  async function loadCoachingView() {
+    const el = document.getElementById('coaching-content');
+    el.innerHTML = '<p style="color:#6b7280;font-size:.9rem;">Loading...</p>';
+    try {
+      const rows = await sbSelect('coaching_settings', 'id=eq.1');
+      const row = Array.isArray(rows) ? rows[0] : null;
+      if (!row || !row.zoom_link) {
+        el.innerHTML = '<p style="color:#6b7280;font-size:.9rem;">Your coach will add the Zoom link here shortly. Check back soon!</p>';
+        return;
+      }
+      el.innerHTML = `
+        <p style="font-size:.95rem;color:#374151;line-height:1.6;margin-bottom:16px;white-space:pre-wrap;">${row.details || ''}</p>
+        <a href="${row.zoom_link}" target="_blank" style="display:inline-block;background:#1A83F2;color:#fff;font-weight:700;font-size:.9rem;padding:12px 24px;border-radius:10px;text-decoration:none;">Join Zoom Call →</a>
+      `;
+    } catch (e) {
+      el.innerHTML = '<p style="color:#dc2626;font-size:.9rem;">Could not load call details. Try refreshing.</p>';
+    }
+  }
 </script>
+
+<!-- ═══ Coaching Calls ═══ -->
+<div class="view padded" id="view-coaching">
+  <p class="page-sub" style="margin-bottom:22px;">Your 1-on-1 coaching call access.</p>
+  <div style="background:var(--card,#fff);border:1px solid var(--border,rgba(0,0,0,.09));border-radius:16px;padding:28px;max-width:560px;">
+    <div id="coaching-content">
+      <p style="color:#6b7280;font-size:.9rem;">Loading...</p>
+    </div>
+  </div>
+</div>
 
 <!-- Mobile lesson navigation -->
 <div id="mob-lesson-nav">
