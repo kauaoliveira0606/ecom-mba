@@ -3500,7 +3500,8 @@ After implementing, add clear comments in the code showing where the Pixel ID is
     'constant-contact': {
       name: 'Constant Contact Coaching Call',
       details: '10 AM EST, Monday to Thursday',
-      calendarLink: 'https://calendar.google.com/calendar/u/0/r/eventedit?text=Alex+-+Q%26A+Call&dates=20260707T140000Z/20260707T150000Z&location=https://meet.google.com/ujj-nkgd-ccj&details=Join+the+call:+https://meet.google.com/ujj-nkgd-ccj'
+      calendarLink: 'https://calendar.google.com/calendar/u/0/r/eventedit?text=Alex+-+Q%26A+Call&dates=20260707T140000Z/20260707T150000Z&location=https://meet.google.com/ujj-nkgd-ccj&details=Join+the+call:+https://meet.google.com/ujj-nkgd-ccj',
+      directLink: 'https://meet.google.com/ujj-nkgd-ccj'
     }
   };
 
@@ -3527,12 +3528,14 @@ After implementing, add clear comments in the code showing where the Pixel ID is
     }
   }
 
-  // Converts a wall-clock date+time in a given IANA timezone to a real UTC Date,
-  // correctly handling DST for that specific date.
   function renderCallCard(data) {
     return `
       <div style="background:var(--card,#fff);border:1px solid var(--border,rgba(0,0,0,.09));border-radius:16px;padding:24px;margin-bottom:16px;">
         <div style="font-size:1rem;font-weight:800;color:#111;margin-bottom:6px;">${data.name}</div>
+        ${data.directLink
+          ? `<a href="${data.directLink}" target="_blank" style="display:inline-block;font-size:.82rem;color:#1A83F2;text-decoration:underline;margin-bottom:10px;">${data.directLink}</a>`
+          : ''
+        }
         <p style="font-size:.9rem;color:#374151;line-height:1.6;margin-bottom:14px;white-space:pre-wrap;">${data.details || ''}</p>
         ${data.calendarLink
           ? `<a href="${data.calendarLink}" target="_blank" style="display:inline-block;background:#1A83F2;color:#fff;font-weight:700;font-size:.88rem;padding:11px 22px;border-radius:10px;text-decoration:none;">Add to Google Calendar →</a>`
