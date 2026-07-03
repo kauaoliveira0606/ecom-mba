@@ -793,45 +793,6 @@
 </div>
 
 <!-- ═══ Admin panel ═══ -->
-<div class="view padded" id="view-admin">
-  <p class="page-sub" style="margin-bottom:22px;">Manage program access, elite proof approvals, and coaching call details.</p>
-
-  <div style="background:var(--card,#fff);border:1px solid var(--border,rgba(0,0,0,.09));border-radius:16px;padding:28px;margin-bottom:24px;">
-    <div style="font-size:1.05rem;font-weight:800;color:#111;margin-bottom:16px;">1. User Approvals</div>
-    <div id="admin-user-list" style="display:flex;flex-direction:column;gap:10px;">
-      <p style="color:#6b7280;font-size:.85rem;">Loading...</p>
-    </div>
-  </div>
-
-  <div style="background:var(--card,#fff);border:1px solid var(--border,rgba(0,0,0,.09));border-radius:16px;padding:28px;margin-bottom:24px;">
-    <div style="font-size:1.05rem;font-weight:800;color:#111;margin-bottom:16px;">2. Elite Access Proof Approvals</div>
-    <div id="admin-proof-list" style="display:flex;flex-direction:column;gap:10px;">
-      <p style="color:#6b7280;font-size:.85rem;">Loading...</p>
-    </div>
-  </div>
-
-  <div style="background:var(--card,#fff);border:1px solid var(--border,rgba(0,0,0,.09));border-radius:16px;padding:28px;">
-    <div style="font-size:1.05rem;font-weight:800;color:#111;margin-bottom:16px;">3. Coaching Call Settings</div>
-    <div style="display:flex;flex-direction:column;gap:10px;max-width:420px;">
-      <label style="font-size:.8rem;font-weight:700;color:#374151;">Zoom link
-        <input id="admin-coaching-zoom" type="text" placeholder="https://zoom.us/j/..." style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;">
-      </label>
-      <div style="display:flex;gap:10px;">
-        <label style="font-size:.8rem;font-weight:700;color:#374151;flex:1;">Date
-          <input id="admin-coaching-date" type="date" style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;">
-        </label>
-        <label style="font-size:.8rem;font-weight:700;color:#374151;flex:1;">Time
-          <input id="admin-coaching-time" type="time" style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;">
-        </label>
-      </div>
-      <label style="font-size:.8rem;font-weight:700;color:#374151;">Details / instructions
-        <textarea id="admin-coaching-details" rows="3" placeholder="e.g. Bring your questions about ad scaling..." style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;resize:vertical;"></textarea>
-      </label>
-      <button id="admin-coaching-save-btn" onclick="adminSaveCoachingSettings()" style="align-self:flex-start;background:#1A83F2;color:#fff;font-weight:700;font-size:.85rem;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;">Save</button>
-    </div>
-  </div>
-</div>
-
 <!-- ═══ Sidebar ═══ -->
 <aside class="sidebar">
   <div class="sidebar-logo">
@@ -1769,6 +1730,54 @@
         <a href="https://re.aistorebuilder.com/base44-pricing?subid=ad-ventur" target="_blank" class="es-btn outline" style="flex:1;">Get Base44 Builder</a>
       </div>
       <div class="rw-proof-note" style="margin-top:12px;">📸 Screenshot both dashboards showing your yearly plan — Wix &amp; Base44</div>
+    </div>
+  </div>
+
+  <div class="view padded" id="view-admin">
+    <p class="page-sub" style="margin-bottom:22px;">Manage program access, elite proof approvals, and coaching call details.</p>
+
+    <div style="background:var(--card,#fff);border:1px solid var(--border,rgba(0,0,0,.09));border-radius:16px;padding:28px;margin-bottom:24px;">
+      <div style="font-size:1.05rem;font-weight:800;color:#111;margin-bottom:16px;">1. User Approvals</div>
+      <div id="admin-user-list" style="display:flex;flex-direction:column;gap:10px;">
+        <p style="color:#6b7280;font-size:.85rem;">Loading...</p>
+      </div>
+    </div>
+
+    <div style="background:var(--card,#fff);border:1px solid var(--border,rgba(0,0,0,.09));border-radius:16px;padding:28px;margin-bottom:24px;">
+      <div style="font-size:1.05rem;font-weight:800;color:#111;margin-bottom:16px;">2. Elite Access Proof Approvals</div>
+      <div id="admin-proof-list" style="display:flex;flex-direction:column;gap:10px;">
+        <p style="color:#6b7280;font-size:.85rem;">Loading...</p>
+      </div>
+    </div>
+
+    <div style="background:var(--card,#fff);border:1px solid var(--border,rgba(0,0,0,.09));border-radius:16px;padding:28px;">
+      <div style="font-size:1.05rem;font-weight:800;color:#111;margin-bottom:16px;">3. Coaching Call Settings</div>
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:420px;">
+        <label style="font-size:.8rem;font-weight:700;color:#374151;">Zoom link
+          <input id="admin-coaching-zoom" type="text" placeholder="https://zoom.us/j/..." style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;">
+        </label>
+        <div style="display:flex;gap:10px;">
+          <label style="font-size:.8rem;font-weight:700;color:#374151;flex:1;">Date
+            <input id="admin-coaching-date" type="date" style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;">
+          </label>
+          <label style="font-size:.8rem;font-weight:700;color:#374151;flex:1;">Time
+            <input id="admin-coaching-time" type="time" style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;">
+          </label>
+        </div>
+        <label style="font-size:.8rem;font-weight:700;color:#374151;">Details / instructions
+          <textarea id="admin-coaching-details" rows="3" placeholder="e.g. Bring your questions about ad scaling..." style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;resize:vertical;"></textarea>
+        </label>
+        <button id="admin-coaching-save-btn" onclick="adminSaveCoachingSettings()" style="align-self:flex-start;background:#1A83F2;color:#fff;font-weight:700;font-size:.85rem;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="view padded" id="view-coaching">
+    <p class="page-sub" style="margin-bottom:22px;">Your 1-on-1 coaching call access.</p>
+    <div style="background:var(--card,#fff);border:1px solid var(--border,rgba(0,0,0,.09));border-radius:16px;padding:28px;max-width:560px;">
+      <div id="coaching-content">
+        <p style="color:#6b7280;font-size:.9rem;">Loading...</p>
+      </div>
     </div>
   </div>
 
@@ -3579,15 +3588,6 @@ After implementing, add clear comments in the code showing where the Pixel ID is
 </script>
 
 <!-- ═══ Coaching Calls ═══ -->
-<div class="view padded" id="view-coaching">
-  <p class="page-sub" style="margin-bottom:22px;">Your 1-on-1 coaching call access.</p>
-  <div style="background:var(--card,#fff);border:1px solid var(--border,rgba(0,0,0,.09));border-radius:16px;padding:28px;max-width:560px;">
-    <div id="coaching-content">
-      <p style="color:#6b7280;font-size:.9rem;">Loading...</p>
-    </div>
-  </div>
-</div>
-
 <!-- Mobile lesson navigation -->
 <div id="mob-lesson-nav">
   <button class="mob-nav-btn" id="mob-prev" onclick="mobPrev()">← Prev</button>
