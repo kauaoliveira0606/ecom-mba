@@ -45,16 +45,14 @@ create policy "admin panel can review submissions" on proof_submissions
 
 -- ── Coaching Calls tab content ──
 -- One row per named coaching call track (e.g. 'wix-yearly', 'constant-contact').
--- Each track is unlocked independently via its own proof_submissions action_key,
--- and the admin panel edits each track's Zoom link/date/time/details separately.
+-- Each track is unlocked independently via its own proof_submissions action_key.
+-- calendar_link is a full Google Calendar "add event" URL pasted in directly by
+-- the admin (date/time/location/details are already baked into that URL).
 create table if not exists coaching_settings (
   id bigint generated always as identity primary key,
   slug text not null unique,
   name text not null,
-  zoom_link text not null default '',
-  call_date text not null default '',
-  call_time text not null default '',
-  call_timezone text not null default 'America/New_York',
+  calendar_link text not null default '',
   details text not null default ''
 );
 
