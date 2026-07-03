@@ -1575,6 +1575,7 @@
   <div class="rw-toast" id="rw-toast"></div>
   <input type="file" id="rw-file-input" accept="image/*" style="display:none" onchange="rwOnFileSelected(this)">
   <input type="file" id="es-file-input" accept="image/*" style="display:none" onchange="esOnFileSelected(this)">
+  <input type="file" id="coach-file-input" accept="image/*" style="display:none" onchange="coachOnFileSelected(this)">
 
   <!-- ── Elite Status ── -->
   <div class="view padded" id="view-elite">
@@ -1632,6 +1633,33 @@
       </div>
       <div class="rw-proof-note" style="margin-top:12px;">📸 Screenshot both dashboards showing your yearly plan — Wix &amp; Base44</div>
     </div>
+
+    <!-- Coaching Call Access -->
+    <div class="es-section-title">✦ Coaching Call Access</div>
+    <p class="page-sub" style="margin-bottom:16px;">Each weekly coaching call unlocks separately — approved based on which plan you upload proof for.</p>
+    <div class="es-perks-grid">
+
+      <div class="es-perk-card" id="coach-card-wix-yearly">
+        <div class="es-perk-header">
+          <span class="es-perk-icon">📞</span>
+          <span class="es-perk-lock" id="coach-status-wix-yearly">Not submitted</span>
+        </div>
+        <div class="es-perk-name">Wix Yearly Coaching Call</div>
+        <div class="es-perk-freq">Weekly call — unlocked with proof of your Wix Yearly plan</div>
+        <button class="rw-btn gold" onclick="coachUpload('wix-yearly')" id="coach-btn-wix-yearly">⬆ Upload Proof of Wix Yearly</button>
+      </div>
+
+      <div class="es-perk-card" id="coach-card-constant-contact">
+        <div class="es-perk-header">
+          <span class="es-perk-icon">📞</span>
+          <span class="es-perk-lock" id="coach-status-constant-contact">Not submitted</span>
+        </div>
+        <div class="es-perk-name">Constant Contact Coaching Call</div>
+        <div class="es-perk-freq">Weekly call — unlocked with proof of your Constant Contact sign-up</div>
+        <button class="rw-btn gold" onclick="coachUpload('constant-contact')" id="coach-btn-constant-contact">⬆ Upload Proof of Constant Contact</button>
+      </div>
+
+    </div>
   </div>
 
   <div class="view padded" id="view-admin">
@@ -1653,32 +1681,55 @@
 
     <div style="background:var(--card,#fff);border:1px solid var(--border,rgba(0,0,0,.09));border-radius:16px;padding:28px;">
       <div style="font-size:1.05rem;font-weight:800;color:#111;margin-bottom:16px;">3. Coaching Call Settings</div>
-      <div style="display:flex;flex-direction:column;gap:10px;max-width:420px;">
-        <label style="font-size:.8rem;font-weight:700;color:#374151;">Zoom link
-          <input id="admin-coaching-zoom" type="text" placeholder="https://zoom.us/j/..." style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;">
-        </label>
-        <div style="display:flex;gap:10px;">
-          <label style="font-size:.8rem;font-weight:700;color:#374151;flex:1;">Date
-            <input id="admin-coaching-date" type="date" style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;">
+
+      <div style="margin-bottom:24px;">
+        <div style="font-size:.9rem;font-weight:700;color:#111;margin-bottom:10px;">Wix Yearly Coaching Call</div>
+        <div style="display:flex;flex-direction:column;gap:10px;max-width:420px;">
+          <label style="font-size:.8rem;font-weight:700;color:#374151;">Zoom link
+            <input id="admin-coach-zoom-wix-yearly" type="text" placeholder="https://zoom.us/j/..." style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;">
           </label>
-          <label style="font-size:.8rem;font-weight:700;color:#374151;flex:1;">Time
-            <input id="admin-coaching-time" type="time" style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;">
+          <div style="display:flex;gap:10px;">
+            <label style="font-size:.8rem;font-weight:700;color:#374151;flex:1;">Date
+              <input id="admin-coach-date-wix-yearly" type="date" style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;">
+            </label>
+            <label style="font-size:.8rem;font-weight:700;color:#374151;flex:1;">Time
+              <input id="admin-coach-time-wix-yearly" type="time" style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;">
+            </label>
+          </div>
+          <label style="font-size:.8rem;font-weight:700;color:#374151;">Details / instructions
+            <textarea id="admin-coach-details-wix-yearly" rows="3" placeholder="e.g. Bring your questions about ad scaling..." style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;resize:vertical;"></textarea>
           </label>
+          <button onclick="adminSaveCoachingSettings('wix-yearly')" style="align-self:flex-start;background:#1A83F2;color:#fff;font-weight:700;font-size:.85rem;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;">Save</button>
         </div>
-        <label style="font-size:.8rem;font-weight:700;color:#374151;">Details / instructions
-          <textarea id="admin-coaching-details" rows="3" placeholder="e.g. Bring your questions about ad scaling..." style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;resize:vertical;"></textarea>
-        </label>
-        <button id="admin-coaching-save-btn" onclick="adminSaveCoachingSettings()" style="align-self:flex-start;background:#1A83F2;color:#fff;font-weight:700;font-size:.85rem;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;">Save</button>
+      </div>
+
+      <div>
+        <div style="font-size:.9rem;font-weight:700;color:#111;margin-bottom:10px;">Constant Contact Coaching Call</div>
+        <div style="display:flex;flex-direction:column;gap:10px;max-width:420px;">
+          <label style="font-size:.8rem;font-weight:700;color:#374151;">Zoom link
+            <input id="admin-coach-zoom-constant-contact" type="text" placeholder="https://zoom.us/j/..." style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;">
+          </label>
+          <div style="display:flex;gap:10px;">
+            <label style="font-size:.8rem;font-weight:700;color:#374151;flex:1;">Date
+              <input id="admin-coach-date-constant-contact" type="date" style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;">
+            </label>
+            <label style="font-size:.8rem;font-weight:700;color:#374151;flex:1;">Time
+              <input id="admin-coach-time-constant-contact" type="time" style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;">
+            </label>
+          </div>
+          <label style="font-size:.8rem;font-weight:700;color:#374151;">Details / instructions
+            <textarea id="admin-coach-details-constant-contact" rows="3" placeholder="e.g. Bring your email marketing questions..." style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;resize:vertical;"></textarea>
+          </label>
+          <button onclick="adminSaveCoachingSettings('constant-contact')" style="align-self:flex-start;background:#1A83F2;color:#fff;font-weight:700;font-size:.85rem;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;">Save</button>
+        </div>
       </div>
     </div>
   </div>
 
   <div class="view padded" id="view-coaching">
-    <p class="page-sub" style="margin-bottom:22px;">Your 1-on-1 coaching call access.</p>
-    <div style="background:var(--card,#fff);border:1px solid var(--border,rgba(0,0,0,.09));border-radius:16px;padding:28px;max-width:560px;">
-      <div id="coaching-content">
-        <p style="color:#6b7280;font-size:.9rem;">Loading...</p>
-      </div>
+    <p class="page-sub" style="margin-bottom:22px;">Your weekly coaching call access.</p>
+    <div id="coaching-content" style="max-width:560px;">
+      <p style="color:#6b7280;font-size:.9rem;">Loading...</p>
     </div>
   </div>
 
@@ -3160,8 +3211,68 @@ After implementing, add clear comments in the code showing where the Pixel ID is
     }
   }
 
+  // ── Coaching Call proof uploads (Wix Yearly / Constant Contact) ──
+  const COACH_SLUGS = ['wix-yearly', 'constant-contact'];
+
+  function coachUpload(slug) {
+    document.getElementById('coach-file-input').dataset.slug = slug;
+    document.getElementById('coach-file-input').click();
+  }
+
+  async function coachOnFileSelected(input) {
+    if (!input.files || !input.files.length) return;
+    const slug = input.dataset.slug;
+    const file = input.files[0];
+    const email = getStoredEmail();
+    const btn = document.getElementById('coach-btn-' + slug);
+    if (btn) { btn.disabled = true; btn.textContent = 'Submitting...'; }
+    sendProofToDiscord('Coaching Call', slug, file);
+    await sbInsert('proof_submissions', { email, tab: 'Coaching Call', action_key: slug, status: 'pending' });
+    input.value = '';
+    rwShowToast('📸 Proof submitted! Awaiting review.');
+    coachCheckStatus();
+  }
+
+  async function coachCheckStatus() {
+    const email = getStoredEmail();
+    if (!email) return;
+    try {
+      const rows = await sbSelect(
+        'proof_submissions',
+        `email=eq.${encodeURIComponent(email)}&tab=eq.${encodeURIComponent('Coaching Call')}`
+      );
+      const bySlug = {};
+      if (Array.isArray(rows)) rows.forEach(r => { bySlug[r.action_key] = r.status; });
+      COACH_SLUGS.forEach(slug => {
+        const status = bySlug[slug];
+        const badge = document.getElementById('coach-status-' + slug);
+        const btn = document.getElementById('coach-btn-' + slug);
+        if (!badge || !btn) return;
+        if (status === 'approved') {
+          badge.textContent = '✓ Approved';
+          btn.textContent = '✓ Approved';
+          btn.disabled = true;
+        } else if (status === 'pending') {
+          badge.textContent = '⏳ Awaiting Approval';
+          btn.textContent = '⏳ Awaiting Approval';
+          btn.disabled = true;
+        } else if (status === 'rejected') {
+          badge.textContent = 'Rejected';
+          btn.textContent = '⬆ Re-upload Proof';
+          btn.disabled = false;
+        } else {
+          badge.textContent = 'Not submitted';
+          btn.disabled = false;
+        }
+      });
+    } catch (e) {
+      // fail silently
+    }
+  }
+
   function updateEliteUI() {
     esCheckPending();
+    coachCheckStatus();
     const unlocked = esIsUnlocked();
     const pending  = esIsPending();
 
@@ -3424,27 +3535,26 @@ After implementing, add clear comments in the code showing where the Pixel ID is
 
   // ── Coaching Calls settings (admin) ──
   async function loadAdminCoachingSettings() {
-    const rows = await sbSelect('coaching_settings', 'id=eq.1');
-    const row = Array.isArray(rows) ? rows[0] : null;
-    if (row) {
-      document.getElementById('admin-coaching-zoom').value = row.zoom_link || '';
-      document.getElementById('admin-coaching-date').value = row.call_date || '';
-      document.getElementById('admin-coaching-time').value = row.call_time || '';
-      document.getElementById('admin-coaching-details').value = row.details || '';
-    }
+    const rows = await sbSelect('coaching_settings', `slug=in.(${COACH_SLUGS.join(',')})`);
+    if (!Array.isArray(rows)) return;
+    rows.forEach(row => {
+      const zoomEl    = document.getElementById('admin-coach-zoom-' + row.slug);
+      const dateEl    = document.getElementById('admin-coach-date-' + row.slug);
+      const timeEl    = document.getElementById('admin-coach-time-' + row.slug);
+      const detailsEl = document.getElementById('admin-coach-details-' + row.slug);
+      if (zoomEl)    zoomEl.value    = row.zoom_link || '';
+      if (dateEl)    dateEl.value    = row.call_date || '';
+      if (timeEl)    timeEl.value    = row.call_time || '';
+      if (detailsEl) detailsEl.value = row.details || '';
+    });
   }
 
-  async function adminSaveCoachingSettings() {
-    const btn = document.getElementById('admin-coaching-save-btn');
-    btn.disabled = true;
-    btn.textContent = 'Saving...';
-    const zoom_link = document.getElementById('admin-coaching-zoom').value.trim();
-    const call_date = document.getElementById('admin-coaching-date').value;
-    const call_time = document.getElementById('admin-coaching-time').value;
-    const details = document.getElementById('admin-coaching-details').value.trim();
-    await sbUpdate('coaching_settings', 'id=eq.1', { zoom_link, call_date, call_time, details });
-    btn.disabled = false;
-    btn.textContent = 'Save';
+  async function adminSaveCoachingSettings(slug) {
+    const zoom_link = document.getElementById('admin-coach-zoom-' + slug).value.trim();
+    const call_date = document.getElementById('admin-coach-date-' + slug).value;
+    const call_time = document.getElementById('admin-coach-time-' + slug).value;
+    const details = document.getElementById('admin-coach-details-' + slug).value.trim();
+    await sbUpdate('coaching_settings', `slug=eq.${encodeURIComponent(slug)}`, { zoom_link, call_date, call_time, details });
   }
 
   // ── Coaching Calls tab (student view) ──
@@ -3454,7 +3564,7 @@ After implementing, add clear comments in the code showing where the Pixel ID is
     try {
       const rows = await sbSelect(
         'proof_submissions',
-        `email=eq.${encodeURIComponent(email)}&tab=eq.${encodeURIComponent('Elite Status')}&action_key=eq.elite-status-upgrade&status=eq.approved&limit=1`
+        `email=eq.${encodeURIComponent(email)}&tab=eq.${encodeURIComponent('Coaching Call')}&status=eq.approved`
       );
       const unlocked = Array.isArray(rows) && rows.length > 0;
       const navItem = document.getElementById('nav-coaching');
@@ -3466,22 +3576,41 @@ After implementing, add clear comments in the code showing where the Pixel ID is
     }
   }
 
+  function renderCallCard(row) {
+    const when = [row.call_date, row.call_time].filter(Boolean).join(' at ');
+    return `
+      <div style="background:var(--card,#fff);border:1px solid var(--border,rgba(0,0,0,.09));border-radius:16px;padding:24px;margin-bottom:16px;">
+        <div style="font-size:1rem;font-weight:800;color:#111;margin-bottom:6px;">${row.name}</div>
+        ${when ? `<p style="font-size:.8rem;font-weight:700;color:#1A83F2;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">${when}</p>` : ''}
+        <p style="font-size:.9rem;color:#374151;line-height:1.6;margin-bottom:14px;white-space:pre-wrap;">${row.details || ''}</p>
+        ${row.zoom_link
+          ? `<a href="${row.zoom_link}" target="_blank" style="display:inline-block;background:#1A83F2;color:#fff;font-weight:700;font-size:.88rem;padding:11px 22px;border-radius:10px;text-decoration:none;">Join Zoom Call →</a>`
+          : `<p style="color:#6b7280;font-size:.85rem;">Your coach will add the Zoom link here shortly. Check back soon!</p>`
+        }
+      </div>
+    `;
+  }
+
   async function loadCoachingView() {
     const el = document.getElementById('coaching-content');
     el.innerHTML = '<p style="color:#6b7280;font-size:.9rem;">Loading...</p>';
+    const email = getStoredEmail();
     try {
-      const rows = await sbSelect('coaching_settings', 'id=eq.1');
-      const row = Array.isArray(rows) ? rows[0] : null;
-      if (!row || !row.zoom_link) {
-        el.innerHTML = '<p style="color:#6b7280;font-size:.9rem;">Your coach will add the Zoom link here shortly. Check back soon!</p>';
+      const approvedRows = await sbSelect(
+        'proof_submissions',
+        `email=eq.${encodeURIComponent(email)}&tab=eq.${encodeURIComponent('Coaching Call')}&status=eq.approved`
+      );
+      const approvedSlugs = Array.isArray(approvedRows) ? approvedRows.map(r => r.action_key) : [];
+      if (approvedSlugs.length === 0) {
+        el.innerHTML = '<p style="color:#6b7280;font-size:.9rem;">Submit proof of your Wix Yearly plan or Constant Contact sign-up in the Elite tab to unlock a coaching call.</p>';
         return;
       }
-      const when = [row.call_date, row.call_time].filter(Boolean).join(' at ');
-      el.innerHTML = `
-        ${when ? `<p style="font-size:.85rem;font-weight:700;color:#1A83F2;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">${when}</p>` : ''}
-        <p style="font-size:.95rem;color:#374151;line-height:1.6;margin-bottom:16px;white-space:pre-wrap;">${row.details || ''}</p>
-        <a href="${row.zoom_link}" target="_blank" style="display:inline-block;background:#1A83F2;color:#fff;font-weight:700;font-size:.9rem;padding:12px 24px;border-radius:10px;text-decoration:none;">Join Zoom Call →</a>
-      `;
+      const settingsRows = await sbSelect('coaching_settings', `slug=in.(${approvedSlugs.map(s => encodeURIComponent(s)).join(',')})`);
+      if (!Array.isArray(settingsRows) || settingsRows.length === 0) {
+        el.innerHTML = '<p style="color:#6b7280;font-size:.9rem;">Your coach will add the call details here shortly. Check back soon!</p>';
+        return;
+      }
+      el.innerHTML = settingsRows.map(renderCallCard).join('');
     } catch (e) {
       el.innerHTML = '<p style="color:#dc2626;font-size:.9rem;">Could not load call details. Try refreshing.</p>';
     }

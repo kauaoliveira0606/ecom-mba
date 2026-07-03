@@ -43,17 +43,24 @@ create policy "anyone can read submissions" on proof_submissions
 create policy "admin panel can review submissions" on proof_submissions
   for update to anon using (true);
 
--- ── Coaching Calls tab content (single row, editable from admin panel) ──
+-- ── Coaching Calls tab content ──
+-- One row per named coaching call track (e.g. 'wix-yearly', 'constant-contact').
+-- Each track is unlocked independently via its own proof_submissions action_key,
+-- and the admin panel edits each track's Zoom link/date/time/details separately.
 create table if not exists coaching_settings (
-  id int primary key default 1,
+  id bigint generated always as identity primary key,
+  slug text not null unique,
+  name text not null,
   zoom_link text not null default '',
-  details text not null default '',
-  constraint coaching_settings_single_row check (id = 1)
+  call_date text not null default '',
+  call_time text not null default '',
+  details text not null default ''
 );
 
-insert into coaching_settings (id, zoom_link, details)
-values (1, '', '')
-on conflict (id) do nothing;
+insert into coaching_settings (slug, name) values
+  ('wix-yearly', 'Wix Yearly Coaching Call'),
+  ('constant-contact', 'Constant Contact Coaching Call')
+on conflict (slug) do nothing;
 
 alter table coaching_settings enable row level security;
 
@@ -62,7 +69,3 @@ create policy "anyone can read coaching settings" on coaching_settings
 
 create policy "admin panel can update coaching settings" on coaching_settings
   for update to anon using (true);
-
--- Add call date/time fields (safe to re-run against an existing table)
-alter table coaching_settings add column if not exists call_date text not null default '';
-alter table coaching_settings add column if not exists call_time text not null default '';
