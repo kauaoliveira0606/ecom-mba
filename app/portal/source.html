@@ -835,7 +835,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
       <span class="nav-label">Coaching Calls</span>
     </div>
-    <div class="nav-item" id="nav-admin" style="display:none;" onclick="showView('admin',this); loadAdminUserList(); loadAdminProofList(); loadAdminCoachingSettings();">
+    <div class="nav-item" id="nav-admin" style="display:none;" onclick="showView('admin',this); loadAdminUserList(); loadAdminProofList();">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><circle cx="18" cy="6" r="3" fill="currentColor" stroke="none"/><path d="M17 6h2M18 5v2" stroke="#fff" stroke-width="1.5"/></svg>
       <span class="nav-label">Admin</span>
     </div>
@@ -885,7 +885,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
       Coaching
     </button>
-    <button class="mob-nav-item" id="mnav-admin" style="display:none;" onclick="showView('admin', document.getElementById('nav-admin')); loadAdminUserList(); loadAdminProofList(); loadAdminCoachingSettings();">
+    <button class="mob-nav-item" id="mnav-admin" style="display:none;" onclick="showView('admin', document.getElementById('nav-admin')); loadAdminUserList(); loadAdminProofList();">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
       Admin
     </button>
@@ -1679,35 +1679,6 @@
       </div>
     </div>
 
-    <div style="background:var(--card,#fff);border:1px solid var(--border,rgba(0,0,0,.09));border-radius:16px;padding:28px;">
-      <div style="font-size:1.05rem;font-weight:800;color:#111;margin-bottom:16px;">3. Coaching Call Settings</div>
-
-      <div style="margin-bottom:24px;">
-        <div style="font-size:.9rem;font-weight:700;color:#111;margin-bottom:10px;">Wix Yearly Coaching Call</div>
-        <div style="display:flex;flex-direction:column;gap:10px;max-width:420px;">
-          <label style="font-size:.8rem;font-weight:700;color:#374151;">Google Calendar link
-            <textarea id="admin-coach-calendarlink-wix-yearly" rows="2" placeholder="https://calendar.google.com/calendar/u/0/r/eventedit?..." style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.8rem;color:#111;box-sizing:border-box;resize:vertical;"></textarea>
-          </label>
-          <label style="font-size:.8rem;font-weight:700;color:#374151;">Details / instructions
-            <textarea id="admin-coach-details-wix-yearly" rows="3" placeholder="e.g. Bring your questions about ad scaling..." style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;resize:vertical;"></textarea>
-          </label>
-          <button onclick="adminSaveCoachingSettings('wix-yearly')" style="align-self:flex-start;background:#1A83F2;color:#fff;font-weight:700;font-size:.85rem;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;">Save</button>
-        </div>
-      </div>
-
-      <div>
-        <div style="font-size:.9rem;font-weight:700;color:#111;margin-bottom:10px;">Constant Contact Coaching Call</div>
-        <div style="display:flex;flex-direction:column;gap:10px;max-width:420px;">
-          <label style="font-size:.8rem;font-weight:700;color:#374151;">Google Calendar link
-            <textarea id="admin-coach-calendarlink-constant-contact" rows="2" placeholder="https://calendar.google.com/calendar/u/0/r/eventedit?..." style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.8rem;color:#111;box-sizing:border-box;resize:vertical;"></textarea>
-          </label>
-          <label style="font-size:.8rem;font-weight:700;color:#374151;">Details / instructions
-            <textarea id="admin-coach-details-constant-contact" rows="3" placeholder="e.g. Bring your email marketing questions..." style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;resize:vertical;"></textarea>
-          </label>
-          <button onclick="adminSaveCoachingSettings('constant-contact')" style="align-self:flex-start;background:#1A83F2;color:#fff;font-weight:700;font-size:.85rem;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;">Save</button>
-        </div>
-      </div>
-    </div>
   </div>
 
   <div class="view padded" id="view-coaching">
@@ -3518,24 +3489,21 @@ After implementing, add clear comments in the code showing where the Pixel ID is
   }
 
   // ── Coaching Calls settings (admin) ──
-  async function loadAdminCoachingSettings() {
-    const rows = await sbSelect('coaching_settings', `slug=in.(${COACH_SLUGS.join(',')})`);
-    if (!Array.isArray(rows)) return;
-    rows.forEach(row => {
-      const linkEl    = document.getElementById('admin-coach-calendarlink-' + row.slug);
-      const detailsEl = document.getElementById('admin-coach-details-' + row.slug);
-      if (linkEl)    linkEl.value    = row.calendar_link || '';
-      if (detailsEl) detailsEl.value = row.details || '';
-    });
-  }
-
-  async function adminSaveCoachingSettings(slug) {
-    const calendar_link = document.getElementById('admin-coach-calendarlink-' + slug).value.trim();
-    const details = document.getElementById('admin-coach-details-' + slug).value.trim();
-    await sbUpdate('coaching_settings', `slug=eq.${encodeURIComponent(slug)}`, { calendar_link, details });
-  }
-
   // ── Coaching Calls tab (student view) ──
+  // Hardcoded directly per your request — no admin form/database editing for this.
+  const COACH_CALL_DATA = {
+    'wix-yearly': {
+      name: 'Wix Yearly Coaching Call',
+      details: '',
+      calendarLink: ''
+    },
+    'constant-contact': {
+      name: 'Constant Contact Coaching Call',
+      details: '',
+      calendarLink: 'https://calendar.google.com/calendar/u/0/r/eventedit?text=Alex+-+Q%26A+Call&dates=20260707T140000Z/20260707T150000Z&location=https://meet.google.com/ujj-nkgd-ccj&details=Join+the+call:+https://meet.google.com/ujj-nkgd-ccj'
+    }
+  };
+
   async function checkCoachingAccess() {
     const email = getStoredEmail();
     if (!email) return;
@@ -3561,13 +3529,13 @@ After implementing, add clear comments in the code showing where the Pixel ID is
 
   // Converts a wall-clock date+time in a given IANA timezone to a real UTC Date,
   // correctly handling DST for that specific date.
-  function renderCallCard(row) {
+  function renderCallCard(data) {
     return `
       <div style="background:var(--card,#fff);border:1px solid var(--border,rgba(0,0,0,.09));border-radius:16px;padding:24px;margin-bottom:16px;">
-        <div style="font-size:1rem;font-weight:800;color:#111;margin-bottom:6px;">${row.name}</div>
-        <p style="font-size:.9rem;color:#374151;line-height:1.6;margin-bottom:14px;white-space:pre-wrap;">${row.details || ''}</p>
-        ${row.calendar_link
-          ? `<a href="${row.calendar_link}" target="_blank" style="display:inline-block;background:#1A83F2;color:#fff;font-weight:700;font-size:.88rem;padding:11px 22px;border-radius:10px;text-decoration:none;">Add to Google Calendar →</a>`
+        <div style="font-size:1rem;font-weight:800;color:#111;margin-bottom:6px;">${data.name}</div>
+        <p style="font-size:.9rem;color:#374151;line-height:1.6;margin-bottom:14px;white-space:pre-wrap;">${data.details || ''}</p>
+        ${data.calendarLink
+          ? `<a href="${data.calendarLink}" target="_blank" style="display:inline-block;background:#1A83F2;color:#fff;font-weight:700;font-size:.88rem;padding:11px 22px;border-radius:10px;text-decoration:none;">Add to Google Calendar →</a>`
           : `<p style="color:#6b7280;font-size:.85rem;">Your coach will add the call link here shortly. Check back soon!</p>`
         }
       </div>
@@ -3580,26 +3548,21 @@ After implementing, add clear comments in the code showing where the Pixel ID is
     const email = getStoredEmail();
     const isAdmin = email === ADMIN_EMAIL;
     try {
-      let settingsRows;
+      let unlockedSlugs;
       if (isAdmin) {
-        settingsRows = await sbSelect('coaching_settings', `slug=in.(${COACH_SLUGS.join(',')})`);
+        unlockedSlugs = COACH_SLUGS;
       } else {
         const approvedRows = await sbSelect(
           'proof_submissions',
           `email=eq.${encodeURIComponent(email)}&tab=eq.${encodeURIComponent('Coaching Call')}&status=eq.approved`
         );
-        const approvedSlugs = Array.isArray(approvedRows) ? approvedRows.map(r => r.action_key) : [];
-        if (approvedSlugs.length === 0) {
-          el.innerHTML = '<p style="color:#6b7280;font-size:.9rem;">Submit proof of your Wix Yearly plan or Constant Contact sign-up in the Elite tab to unlock a coaching call.</p>';
-          return;
-        }
-        settingsRows = await sbSelect('coaching_settings', `slug=in.(${approvedSlugs.map(s => encodeURIComponent(s)).join(',')})`);
+        unlockedSlugs = Array.isArray(approvedRows) ? approvedRows.map(r => r.action_key) : [];
       }
-      if (!Array.isArray(settingsRows) || settingsRows.length === 0) {
-        el.innerHTML = '<p style="color:#6b7280;font-size:.9rem;">Your coach will add the call details here shortly. Check back soon!</p>';
+      if (unlockedSlugs.length === 0) {
+        el.innerHTML = '<p style="color:#6b7280;font-size:.9rem;">Submit proof of your Wix Yearly plan or Constant Contact sign-up in the Elite tab to unlock a coaching call.</p>';
         return;
       }
-      el.innerHTML = settingsRows.map(renderCallCard).join('');
+      el.innerHTML = unlockedSlugs.map(slug => renderCallCard(COACH_CALL_DATA[slug])).join('');
     } catch (e) {
       el.innerHTML = '<p style="color:#dc2626;font-size:.9rem;">Could not load call details. Try refreshing.</p>';
     }
