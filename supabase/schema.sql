@@ -54,6 +54,7 @@ create table if not exists coaching_settings (
   zoom_link text not null default '',
   call_date text not null default '',
   call_time text not null default '',
+  call_timezone text not null default 'America/New_York',
   details text not null default ''
 );
 

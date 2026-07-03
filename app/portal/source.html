@@ -1696,6 +1696,14 @@
               <input id="admin-coach-time-wix-yearly" type="time" style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;">
             </label>
           </div>
+          <label style="font-size:.8rem;font-weight:700;color:#374151;">Time zone
+            <select id="admin-coach-tz-wix-yearly" style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;">
+              <option value="America/New_York">Eastern (ET)</option>
+              <option value="America/Chicago">Central (CT)</option>
+              <option value="America/Denver">Mountain (MT)</option>
+              <option value="America/Los_Angeles">Pacific (PT)</option>
+            </select>
+          </label>
           <label style="font-size:.8rem;font-weight:700;color:#374151;">Details / instructions
             <textarea id="admin-coach-details-wix-yearly" rows="3" placeholder="e.g. Bring your questions about ad scaling..." style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;resize:vertical;"></textarea>
           </label>
@@ -1717,6 +1725,14 @@
               <input id="admin-coach-time-constant-contact" type="time" style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;">
             </label>
           </div>
+          <label style="font-size:.8rem;font-weight:700;color:#374151;">Time zone
+            <select id="admin-coach-tz-constant-contact" style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;">
+              <option value="America/New_York">Eastern (ET)</option>
+              <option value="America/Chicago">Central (CT)</option>
+              <option value="America/Denver">Mountain (MT)</option>
+              <option value="America/Los_Angeles">Pacific (PT)</option>
+            </select>
+          </label>
           <label style="font-size:.8rem;font-weight:700;color:#374151;">Details / instructions
             <textarea id="admin-coach-details-constant-contact" rows="3" placeholder="e.g. Bring your email marketing questions..." style="width:100%;margin-top:4px;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:.85rem;color:#111;box-sizing:border-box;resize:vertical;"></textarea>
           </label>
@@ -3541,10 +3557,12 @@ After implementing, add clear comments in the code showing where the Pixel ID is
       const zoomEl    = document.getElementById('admin-coach-zoom-' + row.slug);
       const dateEl    = document.getElementById('admin-coach-date-' + row.slug);
       const timeEl    = document.getElementById('admin-coach-time-' + row.slug);
+      const tzEl      = document.getElementById('admin-coach-tz-' + row.slug);
       const detailsEl = document.getElementById('admin-coach-details-' + row.slug);
       if (zoomEl)    zoomEl.value    = row.zoom_link || '';
       if (dateEl)    dateEl.value    = row.call_date || '';
       if (timeEl)    timeEl.value    = row.call_time || '';
+      if (tzEl)      tzEl.value      = row.call_timezone || 'America/New_York';
       if (detailsEl) detailsEl.value = row.details || '';
     });
   }
@@ -3553,8 +3571,9 @@ After implementing, add clear comments in the code showing where the Pixel ID is
     const zoom_link = document.getElementById('admin-coach-zoom-' + slug).value.trim();
     const call_date = document.getElementById('admin-coach-date-' + slug).value;
     const call_time = document.getElementById('admin-coach-time-' + slug).value;
+    const call_timezone = document.getElementById('admin-coach-tz-' + slug).value;
     const details = document.getElementById('admin-coach-details-' + slug).value.trim();
-    await sbUpdate('coaching_settings', `slug=eq.${encodeURIComponent(slug)}`, { zoom_link, call_date, call_time, details });
+    await sbUpdate('coaching_settings', `slug=eq.${encodeURIComponent(slug)}`, { zoom_link, call_date, call_time, call_timezone, details });
   }
 
   // ── Coaching Calls tab (student view) ──
@@ -3581,16 +3600,56 @@ After implementing, add clear comments in the code showing where the Pixel ID is
     }
   }
 
+  // Converts a wall-clock date+time in a given IANA timezone to a real UTC Date,
+  // correctly handling DST for that specific date.
+  function localToUTCDate(dateStr, timeStr, timeZone) {
+    if (!dateStr || !timeStr) return null;
+    const naiveUTC = new Date(`${dateStr}T${timeStr}:00Z`);
+    const dtf = new Intl.DateTimeFormat('en-US', {
+      timeZone, hour12: false,
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+    const parts = dtf.formatToParts(naiveUTC).reduce((acc, p) => { acc[p.type] = p.value; return acc; }, {});
+    const hour = parts.hour === '24' ? '00' : parts.hour;
+    const asIfLocal = new Date(`${parts.year}-${parts.month}-${parts.day}T${hour}:${parts.minute}:${parts.second}Z`);
+    const offset = naiveUTC.getTime() - asIfLocal.getTime();
+    return new Date(naiveUTC.getTime() + offset);
+  }
+
+  function toGCalCompact(date) {
+    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  }
+
+  function buildGoogleCalendarLink(row, start) {
+    const end = new Date(start.getTime() + 60 * 60 * 1000); // default 1-hour call
+    const dates = `${toGCalCompact(start)}/${toGCalCompact(end)}`;
+    const text = encodeURIComponent(row.name);
+    const location = encodeURIComponent(row.zoom_link || '');
+    const details = encodeURIComponent(row.zoom_link ? `Join the call: ${row.zoom_link}` : (row.details || ''));
+    return `https://calendar.google.com/calendar/u/0/r/eventedit?text=${text}&dates=${dates}&location=${location}&details=${details}`;
+  }
+
+  function formatCallWhen(row, start) {
+    const dtf = new Intl.DateTimeFormat('en-US', {
+      timeZone: row.call_timezone, weekday: 'short', month: 'short', day: 'numeric',
+      hour: 'numeric', minute: '2-digit', timeZoneName: 'short'
+    });
+    return dtf.format(start);
+  }
+
   function renderCallCard(row) {
-    const when = [row.call_date, row.call_time].filter(Boolean).join(' at ');
+    const start = localToUTCDate(row.call_date, row.call_time, row.call_timezone);
+    const when = start ? formatCallWhen(row, start) : '';
+    const calendarLink = start ? buildGoogleCalendarLink(row, start) : null;
     return `
       <div style="background:var(--card,#fff);border:1px solid var(--border,rgba(0,0,0,.09));border-radius:16px;padding:24px;margin-bottom:16px;">
         <div style="font-size:1rem;font-weight:800;color:#111;margin-bottom:6px;">${row.name}</div>
         ${when ? `<p style="font-size:.8rem;font-weight:700;color:#1A83F2;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">${when}</p>` : ''}
         <p style="font-size:.9rem;color:#374151;line-height:1.6;margin-bottom:14px;white-space:pre-wrap;">${row.details || ''}</p>
-        ${row.zoom_link
-          ? `<a href="${row.zoom_link}" target="_blank" style="display:inline-block;background:#1A83F2;color:#fff;font-weight:700;font-size:.88rem;padding:11px 22px;border-radius:10px;text-decoration:none;">Join Zoom Call →</a>`
-          : `<p style="color:#6b7280;font-size:.85rem;">Your coach will add the Zoom link here shortly. Check back soon!</p>`
+        ${calendarLink
+          ? `<a href="${calendarLink}" target="_blank" style="display:inline-block;background:#1A83F2;color:#fff;font-weight:700;font-size:.88rem;padding:11px 22px;border-radius:10px;text-decoration:none;">Add to Google Calendar →</a>`
+          : `<p style="color:#6b7280;font-size:.85rem;">Your coach will add the call time here shortly. Check back soon!</p>`
         }
       </div>
     `;
