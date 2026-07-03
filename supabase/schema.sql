@@ -62,3 +62,7 @@ create policy "anyone can read coaching settings" on coaching_settings
 
 create policy "admin panel can update coaching settings" on coaching_settings
   for update to anon using (true);
+
+-- Add call date/time fields (safe to re-run against an existing table)
+alter table coaching_settings add column if not exists call_date text not null default '';
+alter table coaching_settings add column if not exists call_time text not null default '';
