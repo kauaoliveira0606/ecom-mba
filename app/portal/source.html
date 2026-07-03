@@ -833,7 +833,7 @@
     </div>
     <div class="nav-item" id="nav-coaching" style="display:none;" onclick="showView('coaching',this); loadCoachingView();">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-      <span class="nav-label">Calls</span>
+      <span class="nav-label">Coaching Calls</span>
     </div>
     <div class="nav-item" id="nav-admin" style="display:none;" onclick="showView('admin',this); loadAdminUserList(); loadAdminProofList(); loadAdminCoachingSettings();">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><circle cx="18" cy="6" r="3" fill="currentColor" stroke="none"/><path d="M17 6h2M18 5v2" stroke="#fff" stroke-width="1.5"/></svg>
@@ -883,7 +883,7 @@
     </button>
     <button class="mob-nav-item" id="mnav-coaching" style="display:none;" onclick="showView('coaching', document.getElementById('nav-coaching')); loadCoachingView();">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-      Calls
+      Coaching
     </button>
     <button class="mob-nav-item" id="mnav-admin" style="display:none;" onclick="showView('admin', document.getElementById('nav-admin')); loadAdminUserList(); loadAdminProofList(); loadAdminCoachingSettings();">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -3561,14 +3561,19 @@ After implementing, add clear comments in the code showing where the Pixel ID is
   async function checkCoachingAccess() {
     const email = getStoredEmail();
     if (!email) return;
+    const navItem = document.getElementById('nav-coaching');
+    const mnavItem = document.getElementById('mnav-coaching');
+    if (email === ADMIN_EMAIL) {
+      if (navItem)  navItem.style.display  = '';
+      if (mnavItem) mnavItem.style.display = '';
+      return;
+    }
     try {
       const rows = await sbSelect(
         'proof_submissions',
         `email=eq.${encodeURIComponent(email)}&tab=eq.${encodeURIComponent('Coaching Call')}&status=eq.approved`
       );
       const unlocked = Array.isArray(rows) && rows.length > 0;
-      const navItem = document.getElementById('nav-coaching');
-      const mnavItem = document.getElementById('mnav-coaching');
       if (navItem)  navItem.style.display  = unlocked ? '' : 'none';
       if (mnavItem) mnavItem.style.display = unlocked ? '' : 'none';
     } catch (e) {
@@ -3595,17 +3600,23 @@ After implementing, add clear comments in the code showing where the Pixel ID is
     const el = document.getElementById('coaching-content');
     el.innerHTML = '<p style="color:#6b7280;font-size:.9rem;">Loading...</p>';
     const email = getStoredEmail();
+    const isAdmin = email === ADMIN_EMAIL;
     try {
-      const approvedRows = await sbSelect(
-        'proof_submissions',
-        `email=eq.${encodeURIComponent(email)}&tab=eq.${encodeURIComponent('Coaching Call')}&status=eq.approved`
-      );
-      const approvedSlugs = Array.isArray(approvedRows) ? approvedRows.map(r => r.action_key) : [];
-      if (approvedSlugs.length === 0) {
-        el.innerHTML = '<p style="color:#6b7280;font-size:.9rem;">Submit proof of your Wix Yearly plan or Constant Contact sign-up in the Elite tab to unlock a coaching call.</p>';
-        return;
+      let settingsRows;
+      if (isAdmin) {
+        settingsRows = await sbSelect('coaching_settings', `slug=in.(${COACH_SLUGS.join(',')})`);
+      } else {
+        const approvedRows = await sbSelect(
+          'proof_submissions',
+          `email=eq.${encodeURIComponent(email)}&tab=eq.${encodeURIComponent('Coaching Call')}&status=eq.approved`
+        );
+        const approvedSlugs = Array.isArray(approvedRows) ? approvedRows.map(r => r.action_key) : [];
+        if (approvedSlugs.length === 0) {
+          el.innerHTML = '<p style="color:#6b7280;font-size:.9rem;">Submit proof of your Wix Yearly plan or Constant Contact sign-up in the Elite tab to unlock a coaching call.</p>';
+          return;
+        }
+        settingsRows = await sbSelect('coaching_settings', `slug=in.(${approvedSlugs.map(s => encodeURIComponent(s)).join(',')})`);
       }
-      const settingsRows = await sbSelect('coaching_settings', `slug=in.(${approvedSlugs.map(s => encodeURIComponent(s)).join(',')})`);
       if (!Array.isArray(settingsRows) || settingsRows.length === 0) {
         el.innerHTML = '<p style="color:#6b7280;font-size:.9rem;">Your coach will add the call details here shortly. Check back soon!</p>';
         return;
