@@ -3643,8 +3643,20 @@ After implementing, add clear comments in the code showing where the Pixel ID is
       if (!el) return;
       el.innerHTML = CATEGORIES.map((c, i) => {
         const active = st.category === c;
-        return `<button onclick="prSelectCategory(${i})" style="padding:6px 14px;border-radius:20px;border:1px solid ${active?'#6366f1':'#e5e7eb'};background:${active?'#6366f1':'#fff'};color:${active?'#fff':'#374151'};font-size:.78rem;font-weight:500;cursor:pointer;">${c}</button>`;
+        return `<button data-pr-cat="${i}" style="padding:6px 14px;border-radius:20px;border:1px solid ${active?'#6366f1':'#e5e7eb'};background:${active?'#6366f1':'#fff'};color:${active?'#fff':'#374151'};font-size:.78rem;font-weight:500;cursor:pointer;">${c}</button>`;
       }).join('');
+    }
+
+    function bindCategoryClicks() {
+      const el = document.getElementById('pr-categories');
+      if (!el) return;
+      el.addEventListener('click', function(e) {
+        const btn = e.target.closest('[data-pr-cat]');
+        if (!btn) return;
+        st.category = CATEGORIES[parseInt(btn.dataset.prCat)];
+        renderCategories();
+        load(1);
+      });
     }
 
     function skeletonCard() {
@@ -3775,18 +3787,13 @@ After implementing, add clear comments in the code showing where the Pixel ID is
       if (st.initialized) return;
       st.initialized = true;
       renderCategories();
+      bindCategoryClicks();
       load(1);
     };
 
     window.prSearch = function(e) {
       e.preventDefault();
       st.query = document.getElementById('pr-search-input').value.trim();
-      load(1);
-    };
-
-    window.prSelectCategory = function(idx) {
-      st.category = CATEGORIES[idx];
-      renderCategories();
       load(1);
     };
 
