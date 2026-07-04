@@ -101,7 +101,7 @@ insert into leaderboard (email, name, entries, is_seeded) values
   ('struanbell@lb.seed',           'Struanbell',            20, true),
   ('rileysantos@lb.seed',          'Riley Santos',          18, true),
   ('zacharytomazic@lb.seed',       'Zacharytomazic',        17, true),
-  ('kaua.bage@gmail.com',          'Kaua Bage',             16, true),
+  ('kauabage@lb.seed',             'Kaua Bage',             16, true),
   ('kentlipkowski@lb.seed',        'Kentlipkowski',         16, true),
   ('quinnharper@lb.seed',          'Quinn Harper',          14, true),
   ('jaydenmoran2009@lb.seed',      'Jaydenmoran2009',       13, true),
