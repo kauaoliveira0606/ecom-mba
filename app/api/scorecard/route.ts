@@ -7,7 +7,9 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const week = searchParams.get("week") || "0";
 
-  const res = await fetch(`${scorecardUrl}?week=${encodeURIComponent(week)}`);
+  const res = await fetch(`${scorecardUrl}?week=${encodeURIComponent(week)}`, {
+    next: { revalidate: 60 },
+  });
   const text = await res.text();
   return new Response(text, { headers: { "Content-Type": "text/csv" } });
 }
