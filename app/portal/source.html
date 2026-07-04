@@ -3641,9 +3641,9 @@ After implementing, add clear comments in the code showing where the Pixel ID is
     function renderCategories() {
       const el = document.getElementById('pr-categories');
       if (!el) return;
-      el.innerHTML = CATEGORIES.map(c => {
+      el.innerHTML = CATEGORIES.map((c, i) => {
         const active = st.category === c;
-        return `<button onclick="prSelectCategory(${JSON.stringify(c)})" style="padding:6px 14px;border-radius:20px;border:1px solid ${active?'#6366f1':'#e5e7eb'};background:${active?'#6366f1':'#fff'};color:${active?'#fff':'#374151'};font-size:.78rem;font-weight:500;cursor:pointer;">${c}</button>`;
+        return `<button onclick="prSelectCategory(${i})" style="padding:6px 14px;border-radius:20px;border:1px solid ${active?'#6366f1':'#e5e7eb'};background:${active?'#6366f1':'#fff'};color:${active?'#fff':'#374151'};font-size:.78rem;font-weight:500;cursor:pointer;">${c}</button>`;
       }).join('');
     }
 
@@ -3784,8 +3784,8 @@ After implementing, add clear comments in the code showing where the Pixel ID is
       load(1);
     };
 
-    window.prSelectCategory = function(cat) {
-      st.category = cat;
+    window.prSelectCategory = function(idx) {
+      st.category = CATEGORIES[idx];
       renderCategories();
       load(1);
     };
