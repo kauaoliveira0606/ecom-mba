@@ -17,9 +17,10 @@ function doGet(e) {
 
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = getSheetForWeek(ss, weekOffset);
+  const timeZone = ss.getSpreadsheetTimeZone();
 
   const values = sheet.getDataRange().getValues();
-  const csv = values.map(row => row.map(csvEscape).join(',')).join('\n');
+  const csv = values.map(row => row.map(v => csvEscape(v, timeZone)).join(',')).join('\n');
 
   return ContentService.createTextOutput(csv).setMimeType(ContentService.MimeType.CSV);
 }
@@ -33,8 +34,15 @@ function getSheetForWeek(ss, weekOffset) {
   return ss.getSheets()[0]; // fallback to first tab
 }
 
-function csvEscape(value) {
-  const str = String(value == null ? '' : value);
+function csvEscape(value, timeZone) {
+  // Format real Date cells as "Jul 5" so the frontend's month-abbreviation
+  // detection (used to find the date header row) matches correctly.
+  let str;
+  if (Object.prototype.toString.call(value) === '[object Date]') {
+    str = Utilities.formatDate(value, timeZone, 'MMM d');
+  } else {
+    str = String(value == null ? '' : value);
+  }
   if (/[",\n]/.test(str)) {
     return '"' + str.replace(/"/g, '""') + '"';
   }
