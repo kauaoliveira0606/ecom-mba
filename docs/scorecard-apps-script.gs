@@ -3,9 +3,9 @@
  * Deploy as a Web App (Deploy > New deployment > Web app, "Anyone" access),
  * then set that deployment URL as SCORECARD_APPS_SCRIPT_URL in Vercel.
  *
- * Reads the active sheet (or a tab named by the `week` offset, if you keep
- * one tab per week) and returns raw CSV text matching the layout the
- * dashboard's frontend expects:
+ * Reads the tab for the requested week (tabs are added left-to-right, one
+ * per week, with the newest week always the rightmost tab) and returns raw
+ * CSV text matching the layout the dashboard's frontend expects:
  *   - a header row
  *   - a date row (month abbreviations in columns B-H) within the first few rows
  *   - metric rows: col A = name, B-H = 7 daily values, I = weekly goal, J = weekly actual
@@ -25,13 +25,13 @@ function doGet(e) {
   return ContentService.createTextOutput(csv).setMimeType(ContentService.MimeType.CSV);
 }
 
-// Adjust this if you keep a single running sheet vs. one tab per week.
-// Example here assumes tabs named "Week 0", "Week 1", ... where 0 = current week.
+// Tabs are added left-to-right, one per week — the newest week is always
+// the last (rightmost) tab. weekOffset 0 = current week (last tab),
+// 1 = previous week (second-to-last), etc.
 function getSheetForWeek(ss, weekOffset) {
-  const name = 'Week ' + weekOffset;
-  const sheet = ss.getSheetByName(name);
-  if (sheet) return sheet;
-  return ss.getSheets()[0]; // fallback to first tab
+  const sheets = ss.getSheets();
+  const idx = sheets.length - 1 - weekOffset;
+  return sheets[Math.max(0, idx)];
 }
 
 function csvEscape(value, timeZone) {
