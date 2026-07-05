@@ -941,8 +941,8 @@
         <path d="M36 12L47 16L44 28" stroke="url(#toolsArrowGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
         <defs>
           <linearGradient id="toolsArrowGrad" x1="4" y1="4" x2="47" y2="28" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#f5773a"/>
-            <stop offset="1" stop-color="#a855f7"/>
+            <stop stop-color="#1A83F2"/>
+            <stop offset="1" stop-color="#5fb0ff"/>
           </linearGradient>
         </defs>
       </svg>
@@ -986,7 +986,7 @@
     track.style.transform = 'translateY(' + (-(idx - centerOffset) * rowH) + 'px)';
     for (var j = 0; j < items.length; j++) {
       var dist = Math.abs(j - idx);
-      items[j].style.color = dist === 0 ? '#f5a623' : '#d8d8d2';
+      items[j].style.color = dist === 0 ? '#1A83F2' : '#d8d8d2';
       items[j].style.opacity = dist === 0 ? '1' : dist === 1 ? '0.45' : '0.18';
     }
   }
