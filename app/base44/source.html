@@ -1050,6 +1050,76 @@
 
 <hr class="divider" />
 
+<!-- 3 STEPS -->
+<div class="section">
+  <p class="section-label" style="display:inline-block;background:#fff;border:1px solid var(--border);border-radius:999px;padding:6px 18px;margin:0 auto 18px;">Easy Steps</p>
+  <h2 class="section-title">Get Your Free Store in 3 Simple Steps</h2>
+
+  <div style="max-width:900px;margin:32px auto 0;position:relative;">
+    <div id="steps-tabs" style="position:relative;height:150px;">
+      <div class="steps-tab" data-step="2" style="position:absolute;top:0;left:20px;right:20px;background:#f3f4f6;border:1px solid var(--border);border-radius:14px;padding:14px 22px;cursor:pointer;">
+        <span style="display:inline-flex;align-items:center;gap:8px;font-size:0.8rem;font-weight:700;letter-spacing:0.5px;color:#9ca3af;">
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border:1.5px solid var(--green);border-radius:5px;color:var(--green);font-size:0.7rem;">3</span>
+          STEP 3
+        </span>
+      </div>
+      <div class="steps-tab" data-step="1" style="position:absolute;top:34px;left:10px;right:10px;background:#f9fafb;border:1px solid var(--border);border-radius:14px;padding:14px 22px;cursor:pointer;">
+        <span style="display:inline-flex;align-items:center;gap:8px;font-size:0.8rem;font-weight:700;letter-spacing:0.5px;color:#6b7280;">
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border:1.5px solid var(--green);border-radius:5px;color:var(--green);font-size:0.7rem;">2</span>
+          STEP 2
+        </span>
+      </div>
+      <div class="steps-tab" data-step="0" style="position:absolute;top:68px;left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px 22px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.06);">
+        <span style="display:inline-flex;align-items:center;gap:8px;font-size:0.82rem;font-weight:800;letter-spacing:0.5px;color:#111;">
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border:1.5px solid var(--green);border-radius:5px;color:var(--green);font-size:0.7rem;">1</span>
+          STEP 1
+        </span>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--border);border-radius:0 0 16px 16px;padding:40px 32px;display:flex;align-items:center;gap:40px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:240px;">
+        <h3 id="steps-content-title" style="font-size:1.6rem;font-weight:800;color:#111;letter-spacing:-0.3px;margin-bottom:14px;">Answer a Few Simple Questions</h3>
+        <p id="steps-content-desc" style="font-size:1rem;color:#374151;line-height:1.7;">Tell us about your niche and preferences. It takes about 2 minutes. No tech skills needed.</p>
+      </div>
+      <div style="flex:1;min-width:260px;">
+        <div style="border-radius:12px;background:#f9fafb;border:1px solid var(--border);border-top:3px solid var(--green);padding:20px;min-height:220px;display:flex;align-items:center;justify-content:center;">
+          <div id="steps-content-visual" style="width:100%;color:#9ca3af;font-size:0.85rem;text-align:center;">Store setup preview</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var stepsData = [
+    { title: 'Answer a Few Simple Questions', desc: 'Tell us about your niche and preferences. It takes about 2 minutes. No tech skills needed.', visual: 'Store setup preview' },
+    { title: 'Step 2: AI Builds Your Store', desc: 'Our AI gets to work. In under 10 minutes, you\'ll have a fully built online store with products, suppliers, and design all done for you.', visual: 'Your store is ready preview' },
+    { title: 'Step 3: Start Selling', desc: 'Your store is live. Send the link to anyone and they can make a purchase. Use our course to learn how to drive traffic and get your first sale.', visual: 'Sales overview preview' }
+  ];
+  var tabs = document.querySelectorAll('.steps-tab');
+  var titleEl = document.getElementById('steps-content-title');
+  var descEl = document.getElementById('steps-content-desc');
+  var visualEl = document.getElementById('steps-content-visual');
+
+  function setActive(stepIdx) {
+    var data = stepsData[stepIdx];
+    titleEl.textContent = data.title;
+    descEl.textContent = data.desc;
+    visualEl.textContent = data.visual;
+  }
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      setActive(parseInt(tab.getAttribute('data-step'), 10));
+    });
+  });
+})();
+</script>
+
+<hr class="divider" />
+
 <!-- TESTIMONIALS -->
 <div class="section">
   <p class="section-label">Student wins</p>
