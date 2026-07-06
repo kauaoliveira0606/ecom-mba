@@ -1415,7 +1415,7 @@
 <!-- FOOTER -->
 <footer>
   <div>
-    <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a>
+    <a href="/policies" target="_blank" rel="noopener">Privacy Policy</a>
     <a href="/terms" target="_blank" rel="noopener">Terms of Service</a>
   </div>
   <p class="footer-disclaimer">
@@ -1527,8 +1527,10 @@
       body: JSON.stringify({ name: name, email: email, phone: country + phone })
     }).then(function () {
       btn.textContent = 'Submitted!';
+      window.location.href = '/receiveaccess';
     }).catch(function () {
       btn.textContent = 'Submitted!';
+      window.location.href = '/receiveaccess';
     });
   }
 </script>
