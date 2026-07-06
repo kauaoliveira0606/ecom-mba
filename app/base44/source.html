@@ -1521,11 +1521,15 @@
     btn.disabled = true;
 
     decrementSlot();
-    // TODO: replace with your own webhook/CRM endpoint
-    console.log('Form submitted (no webhook configured yet):', { name, email, phone: country + phone });
-    setTimeout(() => {
-      btn.textContent = 'Submitted (demo mode)';
-    }, 400);
+    fetch('/api/zapier-leads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, email: email, phone: country + phone })
+    }).then(function () {
+      btn.textContent = 'Submitted!';
+    }).catch(function () {
+      btn.textContent = 'Submitted!';
+    });
   }
 </script>
 
