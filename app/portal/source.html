@@ -1278,25 +1278,26 @@
       <div class="rw-earn-info"><div class="rw-earn-name">Create Facebook Ads Account</div><div class="rw-earn-pts">+10 entries</div></div>
       <button class="rw-verify-btn" id="rwv-fb-ads" onclick="rwUpload('fb-ads')">📷 Verify</button>
     </div>
-    <div class="rw-earn-item">
-      <div class="rw-earn-icon">🎁</div>
-      <div class="rw-earn-info"><div class="rw-earn-name">Sign Up for Wix Yearly</div><div class="rw-earn-pts">+50 entries</div></div>
-      <button class="rw-verify-btn" id="rwv-wix-yearly" onclick="rwUpload('wix-yearly')">📷 Verify</button>
-    </div>
-    <div class="rw-earn-item">
-      <div class="rw-earn-icon">🎁</div>
-      <div class="rw-earn-info"><div class="rw-earn-name">Sign Up for Wix Monthly</div><div class="rw-earn-pts">+25 entries</div></div>
-      <button class="rw-verify-btn" id="rwv-wix-monthly" onclick="rwUpload('wix-monthly')">📷 Verify</button>
-    </div>
-    <div class="rw-earn-item">
-      <div class="rw-earn-icon">🎁</div>
-      <div class="rw-earn-info"><div class="rw-earn-name">Sign Up for Constant Contact Yearly</div><div class="rw-earn-pts">+50 entries</div></div>
-      <button class="rw-verify-btn" id="rwv-cc-yearly" onclick="rwUpload('cc-yearly')">📷 Verify</button>
-    </div>
-    <div class="rw-earn-item">
-      <div class="rw-earn-icon">🎁</div>
-      <div class="rw-earn-info"><div class="rw-earn-name">Sign Up for Constant Contact Monthly</div><div class="rw-earn-pts">+25 entries</div></div>
-      <button class="rw-verify-btn" id="rwv-cc-monthly" onclick="rwUpload('cc-monthly')">📷 Verify</button>
+    <!-- Subscription Bonuses -->
+    <div class="rw-perf-card">
+      <div class="rw-perf-title">🚀 Subscription Bonuses</div>
+      <div class="rw-perf-sub">Sign up for a paid plan to earn bonus entries (free trials don't count — must be an active paid subscription)</div>
+      <div class="rw-earn-item">
+        <div class="rw-earn-icon">🎁</div>
+        <div class="rw-earn-info"><div class="rw-earn-name">Sign Up for Wix Yearly</div><div class="rw-earn-pts">+50 entries</div></div>
+        <button class="rw-verify-btn" id="rwv-wix-yearly" onclick="rwUpload('wix-yearly')">📷 Verify</button>
+      </div>
+      <div class="rw-earn-item">
+        <div class="rw-earn-icon">🎁</div>
+        <div class="rw-earn-info"><div class="rw-earn-name">Sign Up for Wix Monthly</div><div class="rw-earn-pts">+25 entries</div></div>
+        <button class="rw-verify-btn" id="rwv-wix-monthly" onclick="rwUpload('wix-monthly')">📷 Verify</button>
+      </div>
+      <div class="rw-earn-item">
+        <div class="rw-earn-icon">🎁</div>
+        <div class="rw-earn-info"><div class="rw-earn-name">Sign Up for Constant Contact</div><div class="rw-earn-pts">+50 entries</div></div>
+        <button class="rw-verify-btn" id="rwv-cc-sub" onclick="rwUpload('cc-sub')">📷 Verify</button>
+      </div>
+      <div class="rw-proof-note">📸 Upload a screenshot of your active paid subscription dashboard — free trials won't be approved</div>
     </div>
 
     <!-- Daily Learning Bonus -->
@@ -2850,7 +2851,7 @@ After implementing, add clear comments in the code showing where the Pixel ID is
     'wix-30-days': 50, 'first-sale': 50,
     'wix-domain': 10, 'wix-email': 10, 'payments': 10, 'fb-ads': 10,
     'spend-100': 10, 'spend-500': 20, 'spend-1000': 30, 'wix-sub': 20,
-    'wix-yearly': 50, 'wix-monthly': 25, 'cc-yearly': 50, 'cc-monthly': 25,
+    'wix-yearly': 50, 'wix-monthly': 25, 'cc-sub': 50,
   };
 
   function rwGetEntries() { return parseInt(localStorage.getItem(RW_ENTRIES_KEY) || '0'); }
