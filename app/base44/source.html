@@ -1521,16 +1521,17 @@
     btn.disabled = true;
 
     decrementSlot();
+    const redirectUrl = '/receiveaccess?name=' + encodeURIComponent(name);
     fetch('/api/zapier-leads', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: name, email: email, phone: country + phone })
     }).then(function () {
       btn.textContent = 'Submitted!';
-      window.location.href = '/receiveaccess';
+      window.location.href = redirectUrl;
     }).catch(function () {
       btn.textContent = 'Submitted!';
-      window.location.href = '/receiveaccess';
+      window.location.href = redirectUrl;
     });
   }
 </script>
