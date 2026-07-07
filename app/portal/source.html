@@ -4106,7 +4106,7 @@ After implementing, add clear comments in the code showing where the Pixel ID is
     btn.disabled = true;
     btn.textContent = 'Sending…';
     try {
-      await fetch('/api/discord-support', {
+      await fetch('/api/zapier-support', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, category, message }),
