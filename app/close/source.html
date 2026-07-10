@@ -1532,6 +1532,8 @@
     const phone = document.getElementById('m-phone').value.trim();
     if (!name || !email) return;
 
+    if (window.whop) whop.track('lead');
+
     const btn = e.target.querySelector('button[type="submit"]');
     btn.textContent = 'Sending...';
     btn.disabled = true;
