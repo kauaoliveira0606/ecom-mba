@@ -1775,14 +1775,15 @@
     </div>
 
     <!-- Diamond Access -->
-    <div style="background:linear-gradient(135deg,#0b3d91,#1A83F2 60%,#38bdf8);border:1px solid rgba(26,131,242,0.4);border-radius:16px;padding:22px 24px;margin-top:24px;box-shadow:0 8px 24px rgba(26,131,242,0.25);">
+    <div style="background:linear-gradient(135deg,#0b3d91,#1A83F2 60%,#38bdf8);border:1px solid rgba(26,131,242,0.4);border-radius:16px;padding:22px 24px;margin-top:24px;box-shadow:0 8px 24px rgba(26,131,242,0.25);" id="coach-card-diamond">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
         <span style="font-size:1.4rem;">💎</span>
         <span style="font-size:1.05rem;font-weight:900;color:#fff;letter-spacing:-0.3px;">Diamond Access</span>
         <span style="font-size:1.4rem;">💎</span>
-        <span class="es-perk-lock" id="coach-status-diamond" style="margin-left:auto;background:rgba(255,255,255,0.18);color:#fff;">Locked</span>
+        <span class="es-perk-lock" id="coach-status-diamond" style="margin-left:auto;background:rgba(255,255,255,0.18);color:#fff;">Not submitted</span>
       </div>
-      <p style="font-size:.85rem;color:rgba(255,255,255,0.92);line-height:1.6;margin:0;">Sign up for <strong>both</strong> the Wix Yearly plan and Constant Contact, and get your proof approved for each, to unlock Diamond Access: a 4th bonus coaching call every week, for up to <strong>4 calls a week total</strong>. 💎</p>
+      <p style="font-size:.85rem;color:rgba(255,255,255,0.92);line-height:1.6;margin:0 0 14px;">Sign up for <strong>both</strong> the Wix Yearly plan and Constant Contact, then upload proof showing both are active to unlock Diamond Access: a 4th bonus coaching call every week, for up to <strong>4 calls a week total</strong>. 💎</p>
+      <button class="rw-btn gold" onclick="coachUpload('diamond')" id="coach-btn-diamond">⬆ Upload Proof of Diamond Access</button>
     </div>
   </div>
 
@@ -3124,7 +3125,7 @@ After implementing, add clear comments in the code showing where the Pixel ID is
   }
 
   // ── Coaching Call proof uploads (Wix Yearly / Constant Contact) ──
-  const COACH_SLUGS = ['wix-monthly', 'wix-yearly', 'constant-contact'];
+  const COACH_SLUGS = ['wix-monthly', 'wix-yearly', 'constant-contact', 'diamond'];
 
   function coachUpload(slug) {
     document.getElementById('coach-file-input').dataset.slug = slug;
@@ -3177,11 +3178,6 @@ After implementing, add clear comments in the code showing where the Pixel ID is
           btn.disabled = false;
         }
       });
-      const diamondBadge = document.getElementById('coach-status-diamond');
-      if (diamondBadge) {
-        const diamondUnlocked = bySlug['wix-yearly'] === 'approved' && bySlug['constant-contact'] === 'approved';
-        diamondBadge.textContent = diamondUnlocked ? '✓ Unlocked' : 'Locked';
-      }
     } catch (e) {
       // fail silently
     }
@@ -3926,16 +3922,13 @@ After implementing, add clear comments in the code showing where the Pixel ID is
     try {
       let unlockedSlugs;
       if (isAdmin) {
-        unlockedSlugs = COACH_SLUGS.concat('diamond');
+        unlockedSlugs = COACH_SLUGS;
       } else {
         const approvedRows = await sbSelect(
           'proof_submissions',
           `email=eq.${encodeURIComponent(email)}&tab=eq.${encodeURIComponent('Coaching Call')}&status=eq.approved`
         );
         unlockedSlugs = Array.isArray(approvedRows) ? approvedRows.map(r => r.action_key) : [];
-        if (unlockedSlugs.includes('wix-yearly') && unlockedSlugs.includes('constant-contact')) {
-          unlockedSlugs = unlockedSlugs.concat('diamond');
-        }
       }
       if (unlockedSlugs.length === 0) {
         el.innerHTML = '<p style="color:#6b7280;font-size:.9rem;">Submit proof of your Wix Yearly plan or Constant Contact sign-up in the Elite tab to unlock a coaching call.</p>';
