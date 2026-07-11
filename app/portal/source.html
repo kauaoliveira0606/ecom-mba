@@ -3413,32 +3413,13 @@ After implementing, add clear comments in the code showing where the Pixel ID is
   // ── Coaching Calls settings (admin) ──
   // ── Coaching Calls tab (student view) ──
   // Hardcoded directly per your request — no admin form/database editing for this.
-  const COACH_CALL_DATA = {
-    'wix-monthly': {
-      name: 'Wix Monthly Coaching Call',
-      details: '',
-      calendarLink: '',
-      directLink: ''
-    },
-    'wix-yearly': {
-      name: 'Wix Yearly Coaching Call',
-      details: '2 PM EST, Tuesday and Thursday',
-      calendarLink: 'https://calendar.google.com/calendar/u/0/r/eventedit?text=Julia+-+Q%26A+Call&dates=20260707T180000Z/20260707T190000Z&location=https://us06web.zoom.us/j/84183088197?pwd%3Df4k7wPGVOhh4bDltKTNs9tN7oDDMlC.1&details=Join+the+call:+https://us06web.zoom.us/j/84183088197?pwd%3Df4k7wPGVOhh4bDltKTNs9tN7oDDMlC.1',
-      directLink: 'https://us06web.zoom.us/j/84183088197?pwd=f4k7wPGVOhh4bDltKTNs9tN7oDDMlC.1'
-    },
-    'constant-contact': {
-      name: 'Constant Contact Coaching Call',
-      details: '10 AM EST, Monday to Thursday',
-      calendarLink: 'https://calendar.google.com/calendar/u/0/r/eventedit?text=Alex+-+Q%26A+Call&dates=20260707T140000Z/20260707T150000Z&location=https://meet.google.com/ujj-nkgd-ccj&details=Join+the+call:+https://meet.google.com/ujj-nkgd-ccj',
-      directLink: 'https://meet.google.com/ujj-nkgd-ccj'
-    },
-    'diamond': {
-      name: '💎 Diamond Access Coaching Call',
-      details: '',
-      calendarLink: '',
-      directLink: ''
-    }
-  };
+  // Call slots — defines which approved proof unlocks which slot
+  const CALL_SLOTS = [
+    { idx: 0, label: 'Wix Monthly Call',      access: ['wix-monthly', 'wix-yearly', 'diamond'] },
+    { idx: 1, label: 'Wix Yearly Call',       access: ['wix-yearly', 'diamond'] },
+    { idx: 2, label: 'Diamond Call',          access: ['diamond'] },
+    { idx: 3, label: 'Constant Contact Call', access: ['constant-contact', 'diamond'] },
+  ];
 
   async function checkCoachingAccess() {
     const email = getStoredEmail();
@@ -3463,21 +3444,22 @@ After implementing, add clear comments in the code showing where the Pixel ID is
     }
   }
 
-  function renderCallCard(data) {
+  function renderCallCard(label, time, link) {
     return `
-      <div style="background:var(--card,#fff);border:1px solid var(--border,rgba(0,0,0,.09));border-radius:16px;padding:24px;margin-bottom:16px;">
-        <div style="font-size:1rem;font-weight:800;color:#111;margin-bottom:6px;">${data.name}</div>
-        ${data.directLink
-          ? `<a href="${data.directLink}" target="_blank" style="display:inline-block;font-size:.82rem;color:#1A83F2;text-decoration:underline;margin-bottom:10px;">${data.directLink}</a>`
-          : ''
+      <div style="background:var(--card,#fff);border:1px solid var(--border,rgba(0,0,0,.09));border-radius:16px;padding:22px 24px;margin-bottom:14px;max-width:600px;">
+        <div style="font-size:1rem;font-weight:800;color:#111;margin-bottom:${time ? '6px' : '14px'};">${label}</div>
+        ${time ? `<div style="display:inline-flex;align-items:center;gap:5px;background:#f3f4f6;border-radius:6px;padding:4px 10px;font-size:.75rem;color:#374151;font-weight:600;margin-bottom:14px;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          ${time}
+        </div>` : ''}
+        ${link
+          ? `<a href="${link}" target="_blank" style="display:inline-flex;align-items:center;gap:7px;background:#2563eb;color:#fff;text-decoration:none;border-radius:10px;padding:11px 22px;font-size:.85rem;font-weight:700;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 10l4.553-2.069A1 1 0 0121 8.845v6.31a1 1 0 01-1.447.894L15 14"/><rect x="1" y="6" width="14" height="12" rx="2"/></svg>
+              Join Call
+            </a>`
+          : `<p style="font-size:.82rem;color:#9ca3af;margin:0;">Call link coming soon — check back closer to the session.</p>`
         }
-        <p style="font-size:.9rem;color:#374151;line-height:1.6;margin-bottom:14px;white-space:pre-wrap;">${data.details || ''}</p>
-        ${data.calendarLink
-          ? `<a href="${data.calendarLink}" target="_blank" style="display:inline-block;background:#1A83F2;color:#fff;font-weight:700;font-size:.88rem;padding:11px 22px;border-radius:10px;text-decoration:none;">Add to Google Calendar →</a>`
-          : `<p style="color:#6b7280;font-size:.85rem;">Your coach will add the call link here shortly. Check back soon!</p>`
-        }
-      </div>
-    `;
+      </div>`;
   }
 
   // Content injected via innerHTML (not static page HTML) so any internal
@@ -3930,11 +3912,27 @@ After implementing, add clear comments in the code showing where the Pixel ID is
         );
         unlockedSlugs = Array.isArray(approvedRows) ? approvedRows.map(r => r.action_key) : [];
       }
-      if (unlockedSlugs.length === 0) {
+      const visibleSlots = CALL_SLOTS.filter(slot => slot.access.some(a => unlockedSlugs.includes(a)));
+      if (visibleSlots.length === 0) {
         el.innerHTML = '<p style="color:#6b7280;font-size:.9rem;">Submit proof of your Wix Yearly plan or Constant Contact sign-up in the Elite tab to unlock a coaching call.</p>';
         return;
       }
-      el.innerHTML = unlockedSlugs.map(slug => renderCallCard(COACH_CALL_DATA[slug])).join('');
+
+      const settingsRows = await sbSelect('coaching_settings', 'id=eq.1');
+      let calls = [];
+      if (Array.isArray(settingsRows) && settingsRows[0]) {
+        try {
+          const details = typeof settingsRows[0].details === 'string'
+            ? JSON.parse(settingsRows[0].details)
+            : settingsRows[0].details;
+          calls = Array.isArray(details.calls) ? details.calls : [];
+        } catch (e) { calls = []; }
+      }
+
+      el.innerHTML = visibleSlots.map(slot => {
+        const call = calls[slot.idx] || {};
+        return renderCallCard(slot.label, call.time || '', call.link || '');
+      }).join('');
     } catch (e) {
       el.innerHTML = '<p style="color:#dc2626;font-size:.9rem;">Could not load call details. Try refreshing.</p>';
     }
