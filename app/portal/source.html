@@ -866,6 +866,10 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
       <span class="nav-label">Leaderboard</span>
     </div>
+    <div class="nav-item" id="nav-support" onclick="showView('support',this);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <span class="nav-label">Support</span>
+    </div>
   </nav>
   <div class="sidebar-user">
     <div class="user-avatar" id="u-avatar">S</div>
@@ -923,6 +927,10 @@
     <button class="mob-nav-item" id="mnav-leaderboard" onclick="showView('leaderboard', null); fetchLeaderboard();">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
       Rank
+    </button>
+    <button class="mob-nav-item" id="mnav-support" onclick="showView('support', document.getElementById('nav-support'))">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Support
     </button>
     <button class="mob-nav-item" id="mnav-coaching" style="display:none;" onclick="showView('coaching', document.getElementById('nav-coaching')); loadCoachingView();">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
@@ -1444,6 +1452,37 @@
 
     <div style="text-align:center;margin-top:16px;">
       <button class="lb-refresh-btn" onclick="fetchLeaderboard()">↻ Refresh</button>
+    </div>
+  </div>
+  </div>
+
+  <!-- ── Support ── -->
+  <div class="view padded" id="view-support">
+  <div style="max-width:480px;margin:0 auto;">
+    <h1 class="page-title" style="margin-bottom:5px;">Support</h1>
+    <p class="page-sub" style="margin-bottom:22px;">Submit a ticket and we'll get back to you ASAP.</p>
+    <div id="sup-form-wrap">
+      <label class="sup-label">Your Name</label>
+      <input class="sup-input" id="sup-name" type="text" placeholder="e.g. John Smith">
+      <label class="sup-label">Your Email</label>
+      <input class="sup-input" id="sup-email" type="email" placeholder="e.g. john@example.com">
+      <label class="sup-label">Category</label>
+      <select class="sup-select" id="sup-category">
+        <option value="">Select a category…</option>
+        <option value="Platform Issue">Platform Issue</option>
+        <option value="Need Help With a Module">Need Help With a Module</option>
+        <option value="Feature Request">Feature Request</option>
+        <option value="Billing">Billing</option>
+        <option value="Other">Other</option>
+      </select>
+      <label class="sup-label">What's going on?</label>
+      <textarea class="sup-textarea" id="sup-message" placeholder="Describe your issue or question…"></textarea>
+      <button class="sup-submit" id="sup-submit-btn" onclick="submitSupport()">Send Ticket →</button>
+    </div>
+    <div id="sup-success" style="display:none;padding:28px 18px;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:10px;">✅</div>
+      <div style="font-size:.9rem;font-weight:800;color:#111;margin-bottom:5px;">Ticket Received!</div>
+      <div style="font-size:.74rem;color:#6b7280;line-height:1.5;">We've got your message and will follow up shortly. Thanks for reaching out.</div>
     </div>
   </div>
   </div>
@@ -3966,56 +4005,8 @@ After implementing, add clear comments in the code showing where the Pixel ID is
   <div id="mob-lesson-list"></div>
 </div>
 
-<!-- ── Support Widget ── -->
+<!-- ── Support ── -->
 <style>
-  #support-btn {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    z-index: 9999;
-    background: #2563eb;
-    color: #fff;
-    border: none;
-    border-radius: 50px;
-    padding: 11px 18px;
-    font-size: .78rem;
-    font-weight: 700;
-    font-family: 'Montserrat', sans-serif;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    box-shadow: 0 4px 20px rgba(37,99,235,.45);
-    transition: transform .15s, opacity .15s;
-  }
-  #support-btn:hover { transform: translateY(-2px); }
-  #support-btn.hidden { opacity: 0; pointer-events: none; }
-  #support-modal {
-    display: none;
-    position: fixed;
-    bottom: 76px;
-    right: 24px;
-    z-index: 9998;
-    width: 320px;
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 8px 40px rgba(0,0,0,.18);
-    overflow: hidden;
-    font-family: 'Montserrat', sans-serif;
-  }
-  #support-modal.open { display: block; }
-  .sup-head {
-    background: #2563eb;
-    color: #fff;
-    padding: 14px 18px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .sup-head-title { font-size: .9rem; font-weight: 800; }
-  .sup-head-sub { font-size: .68rem; opacity: .8; margin-top: 1px; }
-  .sup-close { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; line-height: 1; padding: 0; }
-  .sup-body { padding: 16px 18px 18px; }
   .sup-label { font-size: .68rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; display: block; }
   .sup-input, .sup-select, .sup-textarea {
     width: 100%;
@@ -4047,68 +4038,9 @@ After implementing, add clear comments in the code showing where the Pixel ID is
   }
   .sup-submit:hover { background: #1d4ed8; }
   .sup-submit:disabled { background: #93c5fd; cursor: default; }
-  #sup-success { display: none; padding: 28px 18px; text-align: center; }
-  #sup-success .sup-check { font-size: 2rem; margin-bottom: 10px; }
-  #sup-success .sup-ok-title { font-size: .9rem; font-weight: 800; color: #111; margin-bottom: 5px; }
-  #sup-success .sup-ok-desc { font-size: .74rem; color: #6b7280; line-height: 1.5; }
 </style>
 
-<button id="support-btn" onclick="toggleSupport()">
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-  Support
-</button>
-
-<div id="support-modal">
-  <div class="sup-head">
-    <div>
-      <div class="sup-head-title">Submit a Support Ticket</div>
-      <div class="sup-head-sub">We'll get back to you ASAP</div>
-    </div>
-    <button class="sup-close" onclick="toggleSupport()">✕</button>
-  </div>
-  <div class="sup-body" id="sup-form-wrap">
-    <label class="sup-label">Your Name</label>
-    <input class="sup-input" id="sup-name" type="text" placeholder="e.g. John Smith">
-    <label class="sup-label">Your Email</label>
-    <input class="sup-input" id="sup-email" type="email" placeholder="e.g. john@example.com">
-    <label class="sup-label">Category</label>
-    <select class="sup-select" id="sup-category">
-      <option value="">Select a category…</option>
-      <option value="Platform Issue">Platform Issue</option>
-      <option value="Need Help With a Module">Need Help With a Module</option>
-      <option value="Feature Request">Feature Request</option>
-      <option value="Billing">Billing</option>
-      <option value="Other">Other</option>
-    </select>
-    <label class="sup-label">What's going on?</label>
-    <textarea class="sup-textarea" id="sup-message" placeholder="Describe your issue or question…"></textarea>
-    <button class="sup-submit" id="sup-submit-btn" onclick="submitSupport()">Send Ticket →</button>
-  </div>
-  <div id="sup-success">
-    <div class="sup-check">✅</div>
-    <div class="sup-ok-title">Ticket Received!</div>
-    <div class="sup-ok-desc">We've got your message and will follow up shortly. Thanks for reaching out.</div>
-  </div>
-</div>
-
 <script>
-  function toggleSupport() {
-    const modal = document.getElementById('support-modal');
-    modal.classList.toggle('open');
-    if (!modal.classList.contains('open')) {
-      setTimeout(() => {
-        document.getElementById('sup-form-wrap').style.display = '';
-        document.getElementById('sup-success').style.display = 'none';
-        document.getElementById('sup-name').value = '';
-        document.getElementById('sup-email').value = '';
-        document.getElementById('sup-category').value = '';
-        document.getElementById('sup-message').value = '';
-        document.getElementById('sup-submit-btn').disabled = false;
-        document.getElementById('sup-submit-btn').textContent = 'Send Ticket →';
-      }, 300);
-    }
-  }
-
   async function submitSupport() {
     const name = document.getElementById('sup-name').value.trim();
     const email = document.getElementById('sup-email').value.trim();
@@ -4132,19 +4064,6 @@ After implementing, add clear comments in the code showing where the Pixel ID is
       alert('Something went wrong. Please try again.');
     }
   }
-
-  // Hide button when inside lesson view
-  const supBtn = document.getElementById('support-btn');
-  const lessonView = document.getElementById('view-lesson');
-  const supObserver = new MutationObserver(() => {
-    if (lessonView.classList.contains('active')) {
-      supBtn.classList.add('hidden');
-      document.getElementById('support-modal').classList.remove('open');
-    } else {
-      supBtn.classList.remove('hidden');
-    }
-  });
-  supObserver.observe(lessonView, { attributes: true, attributeFilter: ['class'] });
 
   // ── Product Research ──
   (function() {
