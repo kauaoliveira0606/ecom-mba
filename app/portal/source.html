@@ -1248,6 +1248,24 @@
       <div class="rw-qualify-note">🔥 You're only <strong id="rw-entries-needed">50 entries</strong> away from qualifying!</div>
     </div>
 
+    <!-- Onboarding Form -->
+    <div class="rw-action-card highlight">
+      <div class="rw-corner-tag">DO THIS FIRST</div>
+      <div class="rw-action-head">
+        <div class="rw-action-icon">📝</div>
+        <div class="rw-action-name">Complete Your Onboarding Form = <span class="amber">100 Entries</span></div>
+      </div>
+      <div class="rw-action-desc">The single biggest entry boost available — bigger than any other action on this page. Fill it out now and lock in your spot as one of our Founding Entries this season.</div>
+      <div class="rw-action-stats">
+        <div class="rw-as"><div class="rw-as-val">100</div><div class="rw-as-lbl">Entries</div></div>
+        <div class="rw-as"><div class="rw-as-val black">2 min</div><div class="rw-as-lbl">Takes</div></div>
+        <div class="rw-as"><div class="rw-as-val grn">✓</div><div class="rw-as-lbl">One-Time</div></div>
+      </div>
+      <a href="https://bronny.typeform.com/to/DUmp8SQC" target="_blank" class="rw-btn gold" style="text-decoration:none;margin-bottom:10px;">📝 Fill Out the Form →</a>
+      <button class="rw-btn outline" style="width:100%;" id="rwv-onboarding-form" onclick="rwUpload('onboarding-form')">📷 Upload Proof of Completion</button>
+      <div class="rw-proof-note">📸 Screenshot the form's confirmation/thank-you page after submitting</div>
+    </div>
+
     <!-- Keep Wix Active -->
     <div class="rw-action-card highlight">
       <div class="rw-corner-tag">FASTEST WAY IN</div>
@@ -2107,7 +2125,7 @@
       color: '#3b82f6',
       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
       lessons: [
-        { title: 'Watch This First', desc: '', videoEmbed: `<vturb-smartplayer id="vid-6a34288bf54c50898d8ef547" style="display: block; margin: 0 auto; width: 100%; "></vturb-smartplayer> <script type="text/javascript"> var s=document.createElement("script"); s.src="https://scripts.converteai.net/acd61d31-54ac-4e72-a977-21cc9e8d1153/players/6a34288bf54c50898d8ef547/v4/player.js", s.async=!0,document.head.appendChild(s); <\/script>`, videoUrl: '' },
+        { title: 'Watch This First', desc: `<div style="background:linear-gradient(135deg,#b45309,#d97706);border-radius:16px;padding:22px 24px;color:#fff;"><div style="font-size:1.05rem;font-weight:800;margin-bottom:8px;">📝 Do This First — Worth 100 Entries</div><div style="font-size:.85rem;line-height:1.6;opacity:.95;margin-bottom:16px;">Fill out your onboarding form now and lock in 100 entries toward this season's rewards — the single biggest entry boost on the whole portal. Takes 2 minutes.</div><a href="https://bronny.typeform.com/to/DUmp8SQC" target="_blank" style="display:inline-block;background:#fff;color:#b45309;font-weight:800;font-size:.85rem;padding:12px 24px;border-radius:10px;text-decoration:none;">Fill Out the Form →</a></div>`, videoEmbed: `<vturb-smartplayer id="vid-6a34288bf54c50898d8ef547" style="display: block; margin: 0 auto; width: 100%; "></vturb-smartplayer> <script type="text/javascript"> var s=document.createElement("script"); s.src="https://scripts.converteai.net/acd61d31-54ac-4e72-a977-21cc9e8d1153/players/6a34288bf54c50898d8ef547/v4/player.js", s.async=!0,document.head.appendChild(s); <\/script>`, videoUrl: '' },
         { title: 'Platform Overview', desc: '', videoEmbed: `<vturb-smartplayer id="vid-6a34aef8ac12b087453e7717" style="display: block; margin: 0 auto; width: 100%; "></vturb-smartplayer> <script type="text/javascript"> var s=document.createElement("script"); s.src="https://scripts.converteai.net/acd61d31-54ac-4e72-a977-21cc9e8d1153/players/6a34aef8ac12b087453e7717/v4/player.js", s.async=!0,document.head.appendChild(s); <\/script>`, videoUrl: '' },
         { title: 'The Blueprint To Becoming Successful', videoEmbed: `<vturb-smartplayer id="vid-6a31925b1ae169c3f14b38ac" style="display: block; margin: 0 auto; width: 100%; "></vturb-smartplayer> <script type="text/javascript"> var s=document.createElement("script"); s.src="https://scripts.converteai.net/acd61d31-54ac-4e72-a977-21cc9e8d1153/players/6a31925b1ae169c3f14b38ac/v4/player.js", s.async=!0,document.head.appendChild(s); <\/script>`, desc: '', videoUrl: '' },
       ],
@@ -2983,6 +3001,7 @@ After implementing, add clear comments in the code showing where the Pixel ID is
   const RW_QUALIFY       = 50;
   const RW_AUTO_MS       = 2 * 60 * 60 * 1000; // auto-approve after 2 hours
   const RW_ENTRY_MAP     = {
+    'onboarding-form': 100,
     'wix-30-days': 50, 'first-sale': 50,
     'wix-domain': 10, 'wix-email': 10, 'payments': 10, 'fb-ads': 10,
     'spend-100': 10, 'spend-500': 20, 'spend-1000': 30, 'wix-sub': 20,
@@ -3097,6 +3116,14 @@ After implementing, add clear comments in the code showing where the Pixel ID is
       if (actions[wixKey])      { wixBtn.textContent = '✓ Approved'; wixBtn.disabled = true; }
       else if (pending[wixKey]) { wixBtn.textContent = '⏳ Awaiting Approval'; wixBtn.disabled = true; }
       else                      { wixBtn.textContent = '📷 Upload Proof (After 30 Days)'; wixBtn.disabled = false; }
+    }
+
+    const onboardBtn = el('rwv-onboarding-form');
+    const onboardKey = 'onboarding-form';
+    if (onboardBtn) {
+      if (actions[onboardKey])      { onboardBtn.textContent = '✓ Approved'; onboardBtn.disabled = true; }
+      else if (pending[onboardKey]) { onboardBtn.textContent = '⏳ Awaiting Approval'; onboardBtn.disabled = true; }
+      else                          { onboardBtn.textContent = '📷 Upload Proof of Completion'; onboardBtn.disabled = false; }
     }
   }
 
