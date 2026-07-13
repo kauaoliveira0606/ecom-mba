@@ -3354,31 +3354,33 @@ After implementing, add clear comments in the code showing where the Pixel ID is
     referralCheckUploadStatus();
   }
 
+  // Referrals are repeatable — a student needs up to 5 approved ones, so the
+  // upload button always stays available rather than locking after one
+  // submission. This just summarizes where their submissions currently stand.
   async function referralCheckUploadStatus() {
     const email = getStoredEmail();
     if (!email) return;
     try {
       const rows = await sbSelect(
         'proof_submissions',
-        `email=eq.${encodeURIComponent(email)}&tab=eq.${encodeURIComponent('Referral')}&order=id.desc&limit=1`
+        `email=eq.${encodeURIComponent(email)}&tab=eq.${encodeURIComponent('Referral')}`
       );
       const badge = document.getElementById('ref-upload-status');
       const btn = document.getElementById('ref-upload-btn');
       if (!badge || !btn) return;
-      const status = Array.isArray(rows) && rows[0] ? rows[0].status : null;
-      if (status === 'pending') {
-        badge.textContent = '⏳ Awaiting Approval';
-        btn.textContent = '⏳ Awaiting Approval';
-        btn.disabled = true;
-      } else if (status === 'rejected') {
-        badge.textContent = 'Rejected';
-        btn.textContent = '⬆ Re-upload Proof';
-        btn.disabled = false;
-      } else {
-        badge.textContent = 'Not submitted';
-        btn.textContent = '⬆ Upload Proof';
-        btn.disabled = false;
-      }
+      const list = Array.isArray(rows) ? rows : [];
+      const pending = list.filter(r => r.status === 'pending').length;
+      const approved = list.filter(r => r.status === 'approved').length;
+      const rejected = list.filter(r => r.status === 'rejected').length;
+
+      const parts = [];
+      if (pending)  parts.push(`⏳ ${pending} awaiting review`);
+      if (approved) parts.push(`✓ ${approved} approved`);
+      if (rejected) parts.push(`${rejected} rejected`);
+      badge.textContent = parts.length ? parts.join(' · ') : 'Not submitted';
+
+      btn.disabled = false;
+      btn.textContent = '⬆ Upload Proof';
     } catch (e) {
       // fail silently
     }
