@@ -323,8 +323,8 @@
     </div>
     <div class="sc-filter-bar" style="margin-bottom:16px;">
       <button class="sc-filter-btn active" data-stl="today" onclick="setSTLFilter('today')">Today</button>
-      <button class="sc-filter-btn" data-stl="week" onclick="setSTLFilter('week')">This Week</button>
       <button class="sc-filter-btn" data-stl="7d" onclick="setSTLFilter('7d')">Last 7 Days</button>
+      <button class="sc-filter-btn" data-stl="30d" onclick="setSTLFilter('30d')">Last 30 Days</button>
     </div>
     <div id="stl-kpi-grid" class="kpi-grid" style="margin-bottom:20px;"></div>
     <div id="stl-table-wrap"></div>
@@ -1057,8 +1057,8 @@
     let start;
     if (stlFilter === 'today') {
       start = new Date(now); start.setHours(0,0,0,0);
-    } else if (stlFilter === 'week') {
-      start = new Date(now); start.setDate(now.getDate() - now.getDay()); start.setHours(0,0,0,0);
+    } else if (stlFilter === '30d') {
+      start = new Date(now); start.setDate(now.getDate() - 29); start.setHours(0,0,0,0);
     } else {
       start = new Date(now); start.setDate(now.getDate() - 6); start.setHours(0,0,0,0);
     }
@@ -1079,7 +1079,7 @@
 
   async function fetchSTLLeads(cutoff) {
     let leads = [], cursor = null, pages = 0;
-    while (pages < 5) {
+    while (pages < 15) {
       let url = '/api/close-leads?since=' + encodeURIComponent(cutoff.toISOString());
       if (cursor) url += '&cursor=' + encodeURIComponent(cursor);
       const res  = await fetch(url);
@@ -1094,7 +1094,7 @@
 
   async function fetchSTLCalls(cutoff) {
     let calls = [], cursor = null, pages = 0;
-    while (pages < 8) {
+    while (pages < 25) {
       let url = '/api/close-calls?since=' + encodeURIComponent(cutoff.toISOString());
       if (cursor) url += '&cursor=' + encodeURIComponent(cursor);
       const res  = await fetch(url);
@@ -1114,7 +1114,7 @@
 
   async function loadSTL() {
     const cutoff = new Date();
-    cutoff.setDate(cutoff.getDate() - 7);
+    cutoff.setDate(cutoff.getDate() - 29);
     cutoff.setHours(0, 0, 0, 0);
 
     const kpiEl = document.getElementById('stl-kpi-grid');
