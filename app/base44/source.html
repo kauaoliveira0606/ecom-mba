@@ -1485,10 +1485,10 @@
 
   // Slots remaining
   function getSlots() {
-    let s = parseInt(localStorage.getItem('lt_slots_v3'));
+    let s = parseInt(localStorage.getItem('lt_slots_v4'));
     if (!s || s < 1) {
       s = Math.floor(Math.random() * 3) + 5; // random 5-7
-      localStorage.setItem('lt_slots_v3', s);
+      localStorage.setItem('lt_slots_v4', s);
     }
     return s;
   }
@@ -1501,7 +1501,7 @@
 
   function decrementSlot() {
     let s = getSlots();
-    if (s > 1) { s--; localStorage.setItem('lt_slots_v3', s); }
+    if (s > 1) { s--; localStorage.setItem('lt_slots_v4', s); }
     updateSlotsDisplay();
   }
 
@@ -1514,7 +1514,7 @@
       let s = getSlots();
       if (s > 1) {
         s--;
-        localStorage.setItem('lt_slots_v3', s);
+        localStorage.setItem('lt_slots_v4', s);
         updateSlotsDisplay();
       } else {
         stopSlotsTicker();
